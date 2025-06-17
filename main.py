@@ -6,6 +6,8 @@ from datetime import datetime
 st.set_page_config(layout="wide")
 from Patientenseite_State_2_2.Tendency_dropdown import TherapySession
 
+
+#PatientenDaten
 patient_attributes = {
     "Name": "Neininger",
     "Vorname": "Hannobert",
@@ -23,34 +25,34 @@ patient_attributes = {
 if "therapy_session" not in st.session_state:
     st.session_state.therapy_session = []
 
-st.session_state.therapy_session = []
 st.session_state.therapy_session.append(TherapySession(
     date="2023-10-01",
     tendency="Steigend",
     patient=patient_attributes["Name"]
 ))
+def add_therapy_session(): ####### if else statement für doppelte daten. 
+    """Function to add a new therapy session."""
+##+else:
+    new_session = TherapySession(
+        date=datetime.now().strftime("%Y-%m-%d"),
+        tendency="",
+        patient=patient_attributes["Name"]
+    )
+    
+    st.session_state.therapy_session.append(new_session)
+    st.success("Neue Therapiesitzung hinzugefügt!")
 
 # Generate example tendency plot data
 x = np.arange(0, 10, 1)
 y = np.random.normal(loc=0.5, scale=0.1, size=10).cumsum()
 
+# Function to load local CSS for styling
 def local_css(file_name):
     with open(file_name) as f:
         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
 
 local_css("style.css")
 
-def add_therapy_session():
-    """Function to add a new therapy session."""
-    # Here you would implement the logic to add a new session
-    # For now, we just append a dummy session for demonstration
-    new_session = TherapySession(
-        date=datetime.now().strftime("%Y-%m-%d"),
-        tendency="",
-        patient=patient_attributes["Name"]
-    )
-    st.session_state.therapy_session.append(new_session)
-    st.success("Neue Therapiesitzung hinzugefügt!")
 
 # Layout: left colorblocked column, right main area
 left_col, right_col = st.columns([1, 3], gap="large")
@@ -86,11 +88,9 @@ with right_col:
 
     for session in st.session_state.therapy_session:
        
-        with st.expander("Therapie-Sitzung " + str(session.date)):
+        with st.expander("Therapie-Sitzung " + str(session.date)): # zwei Forms mit dem gleichen Datum sind aktuell nicht möglich (da auch gleicher name)
             st.write('''
-                The chart above shows some numbers I picked for you.
-                I rolled actual dice for these, so they're *guaranteed* to
-                be random.
+                Dokumentiere die heutige Therapieeinheit. Vergiss das pre- and post-Testing nicht, sowie die Tendenz der Therapie zu notieren.
             ''')
             st.text_input(f"**Datum:** {session.date}")
             st.text_input(f"**Tendenz:** {session.tendency}")
