@@ -1,4 +1,8 @@
 import streamlit as st
+from patientenkalender import show_patient_calendar
+from suchfunktion_patient import searchbar  
+
+
 
 st.title("T-Doc: Hauptmenü")
 if 'stage' not in st.session_state:
@@ -23,7 +27,7 @@ st.markdown("""
     .stButton button {
         font-size: 2em;
         padding: 1em 0.5em;
-        background: linear-gradient(90deg, #ff6f61, #6ec6ff, #81c784, #ffd54f);
+        background: #6ec6ff;
         color: white;
         border: none;
         border-radius: 10px;
@@ -31,15 +35,17 @@ st.markdown("""
         transition: background 0.3s;
     }
     .stButton button:hover {
-        background: linear-gradient(90deg, #ffd54f, #81c784, #6ec6ff, #ff6f61);
-        color: #222;
+        background: #42a5f5;
+        color: white;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # Anzeige je nach Auswahl
 if st.session_state.mode == 'patient' and st.session_state.stage == 1:
-    name = st.text_input('Patientenname')
+    searchbar()
 elif st.session_state.mode == 'kalender' and st.session_state.stage == 1:
-    name = st.text_input('Kalendername')	
+    show_patient_calendar()
+
+
 
