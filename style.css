@@ -1,0 +1,9 @@
+body {
+  background-color: lightgoldenrodyellow;
+}
+
+div[data-testid="stHorizontalBlock"] > div:first-of-type {
+  background-color: rgb(69, 192, 254);
+}
+
+/* comment: hier noch den rand nach links weiter setzen, sodass Text nicht mit Rand beginnt */
