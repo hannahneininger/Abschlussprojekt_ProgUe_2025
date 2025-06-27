@@ -2,8 +2,8 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from datetime import datetime
 
-# %%
 def create_tendency_dropdown():
     tendency_options = ["Steigend", "Fallend", "Stagnierend"]
     tendency = st.selectbox("Tendenz auswählen", tendency_options)
@@ -41,19 +41,21 @@ plt.show()
 def create_empty_dates_list():
     return []
 
-#create a class TherapySession wich had a module for date and tendency and patient
+
 class TherapySession:
-    def __init__(self, date, tendency, patient):
+    def __init__(self, date, tendency, patient, timestamp=None, documentation=""):
         self.date = date
         self.tendency = tendency
         self.patient = patient
+        self.timestamp = timestamp or datetime.now().strftime("%Y%m%d%H%M%S%f")
+        self.documentation = documentation  # Unique per session
 
-    def __repr__(self):
+    def _repr_(self):
         return f"TherapySession(date={self.date}, tendency={self.tendency}, patient={self.patient})"
     
 # create a class Patient wich has the Attributes: Name = str, Vorname= str, Geburtsdatum= str, Straße= str, Hausnummer= int, PLZ= int, Stadt= str, Versicherung= str, Zusatzversicherung= True/False, Arzt= str, email= str, Telefon= int
 class Patient:
-    def __init__(self, Name, Vorname, Geburtsdatum, Straße, Hausnummer, Postleitzahl, Stadt, Versicherung, Zusatzversicherung, Arzt, email, Telefon):
+    def _init_(self, Name, Vorname, Geburtsdatum, Straße, Hausnummer, Postleitzahl, Stadt, Versicherung, Zusatzversicherung, Arzt, email, Telefon):
         self.Name = Name
         self.Vorname = Vorname
         self.Geburtsdatum = Geburtsdatum
@@ -67,7 +69,7 @@ class Patient:
         self.email = email
         self.Telefon = Telefon
 
-    def __repr__(self):
+    def _repr_(self):
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, Geburtsdatum={self.Geburtsdatum}, "
                 f"Versicherung={self.Versicherung}, Zusatzversicherung={self.Zusatzversicherung}, "
                 f"Arzt={self.Arzt}, email={self.email}, Telefon={self.Telefon})")
