@@ -2,6 +2,7 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+from datetime import datetime
 
 # %%
 def create_tendency_dropdown():
@@ -41,12 +42,14 @@ plt.show()
 def create_empty_dates_list():
     return []
 
-#create a class TherapySession wich had a module for date and tendency and patient
+
 class TherapySession:
-    def __init__(self, date, tendency, patient):
+    def __init__(self, date, tendency, patient, timestamp=None, documentation=""):
         self.date = date
         self.tendency = tendency
         self.patient = patient
+        self.timestamp = timestamp or datetime.now().strftime("%Y%m%d%H%M%S%f")
+        self.documentation = documentation  # Unique per session
 
     def __repr__(self):
         return f"TherapySession(date={self.date}, tendency={self.tendency}, patient={self.patient})"
