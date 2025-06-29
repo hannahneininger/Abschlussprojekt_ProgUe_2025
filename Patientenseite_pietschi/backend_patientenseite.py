@@ -9,8 +9,9 @@ def create_tendency_dropdown():
     tendency = st.selectbox("Tendenz auswählen", tendency_options)
     return tendency
 
-def get_selected_tendency(tendency):
-    return tendency
+def get_numeric_tendency(tendency):
+    tendency_map = {"Steigend": 1, "Stagnierend": 0, "Fallend": -1}
+    return tendency_map.get(tendency, None)
 
 # %%
 def plot_tendency_over_time(tendencies, dates):
@@ -36,6 +37,26 @@ def plot_tendency_over_time(tendencies, dates):
 
 plt.show()
 
+#%% 
+def add_therapy_session(patient):
+    """Add a new therapy session with today's date."""
+    today = datetime.now().strftime("%Y-%m-%d")
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S%f")
+
+    existing_dates = [session.date for session in st.session_state.therapy_session]
+    if today in existing_dates:
+        st.warning("Für heute wurde bereits eine Therapiesitzung erfasst.")
+    else:
+        new_session = TherapySession(
+            date=today,
+            tendency="",
+            patient=patient.Name,  # ✅ Zugriff über Instanz
+            timestamp=timestamp
+        )
+        st.session_state.therapy_session.append(new_session)
+        st.success(f"Neue Therapiesitzung für {today} hinzugefügt!")
+        st.rerun()
+
 # %%
 #create an empty list of dates which can later on be filled with the dates of therapy sessions
 def create_empty_dates_list():
@@ -54,7 +75,7 @@ class TherapySession:
     
 # create a class Patient wich has the Attributes: Name = str, Vorname= str, Geburtsdatum= str, Straße= str, Hausnummer= int, PLZ= int, Stadt= str, Versicherung= str, Zusatzversicherung= True/False, Arzt= str, email= str, Telefon= int
 class Patient:
-    def _init_(self, Name, Vorname, Geburtsdatum, Straße, Hausnummer, Postleitzahl, Stadt, Versicherung, Zusatzversicherung, Arzt, email, Telefon):
+    def __init__(self, Name, Vorname, Geburtsdatum, Straße, Hausnummer, Postleitzahl, Stadt, Versicherung, Zusatzversicherung, Arzt, email, Telefon):
         self.Name = Name
         self.Vorname = Vorname
         self.Geburtsdatum = Geburtsdatum
@@ -67,6 +88,7 @@ class Patient:
         self.Arzt = Arzt
         self.email = email
         self.Telefon = Telefon
+
 
     def _repr_(self):
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, Geburtsdatum={self.Geburtsdatum}, "
