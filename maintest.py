@@ -1,11 +1,22 @@
 import streamlit as st
 from patientenkalender import show_patient_calendar
-from patientseite import searchbar
+from patientseite import suche_patienten
 from patientseite import zeige_patientenliste, neuen_patient_hinzufuegen
 
 # Initialisiere Session State für den Modus und die Stage
 if 'mode' not in st.session_state:
     st.session_state.mode = None
+
+# Initialisiere selected_patient
+if 'selected_patient' not in st.session_state:
+    st.session_state.selected_patient = None
+
+if 'suchmodus' not in st.session_state:
+    st.session_state.suchmodus = True  # Optional: Starte direkt im Suchmodus
+
+if 'patientenliste' not in st.session_state:
+    st.session_state.patientenliste = []
+
 
 # Funktion zum Setzen des Modus
 def set_mode(mode):
@@ -47,14 +58,13 @@ if st.session_state.mode is None:
         st.button('Kalender', on_click=set_mode, args=['kalender'], key='btn_kalender')
 
 # Wenn Modus gewählt wurde, zeige entsprechenden Inhalt
-else:
-    if st.session_state.mode == 'patient':
-        searchbar()
-        neuen_patient_hinzufuegen()
-        zeige_patientenliste()
-        st.button("Zurück zum Hauptmenü", on_click=go_back)
+elif st.session_state.mode == 'patient':
+    suche_patienten()
+    neuen_patient_hinzufuegen()
+    zeige_patientenliste()
+    st.button("Zurück zum Hauptmenü", on_click=go_back)
 
-    elif st.session_state.mode == 'kalender':
+elif st.session_state.mode == 'kalender':
         show_patient_calendar()
         st.button("Zurück zum Hauptmenü", on_click=go_back)
     # Zurück-Button
