@@ -1,6 +1,6 @@
 import streamlit as st
 from patientenkalender import show_patient_calendar
-from patientseite import suche_patienten
+from patientseite import suche_patienten, searchbar, suche_patienten, zeige_suchergebnisse
 from patientseite import zeige_patientenliste, neuen_patient_hinzufuegen
 
 # Initialisiere Session State für den Modus und die Stage
@@ -59,7 +59,20 @@ if st.session_state.mode is None:
 
 # Wenn Modus gewählt wurde, zeige entsprechenden Inhalt
 elif st.session_state.mode == 'patient':
-    suche_patienten()
+
+    # --- Suchmodus vs. Neuanlage ---
+    if st.session_state.suchmodus:
+        # Teil 1: Suchleiste + Suchergebnisse
+        search_term = searchbar()
+        gefundene_patienten = suche_patienten(search_term)
+
+        if search_term is not None:
+            if len(gefundene_patienten) > 0:
+                zeige_suchergebnisse(gefundene_patienten)
+                
+            else:
+                st.info("Keine Patienten gefunden.")
+                
     neuen_patient_hinzufuegen()
     zeige_patientenliste()
     st.button("Zurück zum Hauptmenü", on_click=go_back)

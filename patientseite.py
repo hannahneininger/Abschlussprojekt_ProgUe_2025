@@ -2,7 +2,7 @@ import streamlit as st
 import datetime
 
 
-def suche_patienten():
+def searchbar():
     """
     Creates a search bar for patient names.
     Returns the search term entered by the user.
@@ -65,7 +65,7 @@ def zeige_patientenliste():
             st.markdown(f"**{patient.Vorname} {patient.Name}**")
 
         with col2:
-            if st.button(f"Auswähöen", key=f"btn_selcet_{idx}"):
+            if st.button(f"Auswählen", key=f"btn_selcet_{idx}"):
                 st.session_sate.selected_patient = patient
                 st.experimental_rerun()
 
