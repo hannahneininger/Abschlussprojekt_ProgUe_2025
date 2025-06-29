@@ -66,7 +66,7 @@ def zeige_patientenliste():
 
         with col2:
             if st.button(f"Auswählen", key=f"btn_selcet_{idx}"):
-                st.session_sate.selected_patient = patient
+                st.session_state.selected_patient = patient
                 st.experimental_rerun()
 
         st.markdown("---")
