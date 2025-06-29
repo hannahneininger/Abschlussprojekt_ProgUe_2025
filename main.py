@@ -1,6 +1,6 @@
 import streamlit as st
 from patientenkalender import show_patient_calendar
-from patientseite import searchbar  
+from patientseite import suche_patienten  
 
 
 # Hauptmenü für T-Doc
@@ -48,7 +48,7 @@ def go_back():
 
 # Anzeige je nach Auswahl
 if st.session_state.mode == 'patient' and st.session_state.stage == 1:
-    searchbar()
+    suche_patienten()
 elif st.session_state.mode == 'kalender' and st.session_state.stage == 1:
     show_patient_calendar()
     st.button("Zurück zum Hauptmenü", on_click=go_back)

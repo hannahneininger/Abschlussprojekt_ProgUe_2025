@@ -1,12 +1,22 @@
 import streamlit as st
 from patientenkalender import show_patient_calendar
-from patientseite import searchbar
-from patientseite import show_patients_list
-
+from patientseite import suche_patienten, searchbar, suche_patienten, zeige_suchergebnisse
+from patientseite import zeige_patientenliste, neuen_patient_hinzufuegen
 
 # Initialisiere Session State für den Modus und die Stage
 if 'mode' not in st.session_state:
     st.session_state.mode = None
+
+# Initialisiere selected_patient
+if 'selected_patient' not in st.session_state:
+    st.session_state.selected_patient = None
+
+if 'suchmodus' not in st.session_state:
+    st.session_state.suchmodus = True  # Optional: Starte direkt im Suchmodus
+
+if 'patientenliste' not in st.session_state:
+    st.session_state.patientenliste = []
+
 
 # Funktion zum Setzen des Modus
 def set_mode(mode):
@@ -48,12 +58,27 @@ if st.session_state.mode is None:
         st.button('Kalender', on_click=set_mode, args=['kalender'], key='btn_kalender')
 
 # Wenn Modus gewählt wurde, zeige entsprechenden Inhalt
-else:
-    if st.session_state.mode == 'patient':
-        searchbar()
+elif st.session_state.mode == 'patient':
 
-    elif st.session_state.mode == 'kalender':
-        show_patient_calendar()
+    # --- Suchmodus vs. Neuanlage ---
+    if st.session_state.suchmodus:
+        # Teil 1: Suchleiste + Suchergebnisse
+        search_term = searchbar()
+        gefundene_patienten = suche_patienten(search_term)
 
-    # Zurück-Button
+        if search_term is not None:
+            if len(gefundene_patienten) > 0:
+                zeige_suchergebnisse(gefundene_patienten)
+                
+            else:
+                st.info("Keine Patienten gefunden.")
+                
+    neuen_patient_hinzufuegen()
+    zeige_patientenliste()
     st.button("Zurück zum Hauptmenü", on_click=go_back)
+
+elif st.session_state.mode == 'kalender':
+        show_patient_calendar()
+        st.button("Zurück zum Hauptmenü", on_click=go_back)
+    # Zurück-Button
+    #st.button("Zurück zum Hauptmenü", on_click=go_back)

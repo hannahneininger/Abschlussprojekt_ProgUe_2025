@@ -75,7 +75,10 @@ class TherapySession:
     
 # create a class Patient wich has the Attributes: Name = str, Vorname= str, Geburtsdatum= str, Straße= str, Hausnummer= int, PLZ= int, Stadt= str, Versicherung= str, Zusatzversicherung= True/False, Arzt= str, email= str, Telefon= int
 class Patient:
-    def __init__(self, Name, Vorname, Geburtsdatum, Straße, Hausnummer, Postleitzahl, Stadt, Versicherung, Zusatzversicherung, Arzt, email, Telefon):
+
+    def __init__(self, ID, Name, Vorname, Geburtsdatum, Straße, Hausnummer, Postleitzahl, Stadt, Versicherung, Zusatzversicherung, Arzt, email, Telefon):
+        self.ID = ID
+
         self.Name = Name
         self.Vorname = Vorname
         self.Geburtsdatum = Geburtsdatum
@@ -90,7 +93,8 @@ class Patient:
         self.Telefon = Telefon
 
 
-    def _repr_(self):
+    def __repr__(self):
+
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, Geburtsdatum={self.Geburtsdatum}, "
                 f"Versicherung={self.Versicherung}, Zusatzversicherung={self.Zusatzversicherung}, "
                 f"Arzt={self.Arzt}, email={self.email}, Telefon={self.Telefon})")
