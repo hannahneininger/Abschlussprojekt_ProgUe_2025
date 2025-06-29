@@ -64,5 +64,3 @@ def show_patient_calendar():
                 st.success("✅ Termin erfolgreich hinzugefügt!")
             else:
                 st.error("❌ Bitte alle Felder ausfüllen.")
-
-
