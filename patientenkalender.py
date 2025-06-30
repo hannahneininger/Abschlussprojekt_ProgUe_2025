@@ -1,30 +1,43 @@
-import streamlit as st
 import pandas as pd
 from datetime import datetime, timedelta, date
 from streamlit import session_state as state
 from streamlit_calendar import calendar
-
-
-
-if "patient_data" not in st.session_state:
-    st.session_state.patient_data = pd.DataFrame(columns=["Name", "Date", "Time", "Description"])
+import streamlit as st
+from Patientenseite_pietschi.backend_patientenseite import TherapySession, Patient
 
 def show_patient_calendar():
+    """Zeigt den interaktiven Kalender für Therapiesitzungen an."""
+    
+    # Initialize session_state if needed
+    if "therapy_sessions" not in st.session_state:
+        st.session_state.therapy_sessions = []
+
     st.title("🗓️ Patientenkalender")
 
     # 🔍 Suchfeld
     suchbegriff = st.text_input("🔎 Suche nach Patient oder Beschreibung")
 
-    # Daten laden & filtern
-    df = st.session_state.patient_data
+    # 📁 Daten laden
+    sessions_data = [
+        {
+            "Name": session.patient,
+            "Date": session.date,
+            "Time": "10:00",  # Placeholder time
+            "Description": session.documentation or "Keine Beschreibung"
+        }
+        for session in st.session_state.therapy_sessions
+    ]
+    df = pd.DataFrame(sessions_data)
+
+    # 🔍 Filtern nach Suchbegriff
     if suchbegriff:
-        df = df[df.apply(lambda row: suchbegriff.lower() in row.astype(str).str.lower().to_string(), axis=1)]
+        df = df[df.apply(lambda row: suchbegriff.lower() in str(row).lower(), axis=1)]
 
     # 📅 Kalender vorbereiten
     events = []
     for _, row in df.iterrows():
         start_datetime = datetime.strptime(f"{row['Date']} {row['Time']}", "%Y-%m-%d %H:%M")
-        end_datetime = start_datetime + pd.Timedelta(minutes=30)  # Termin dauert z. B. 30 Minuten
+        end_datetime = start_datetime + timedelta(minutes=30)
         events.append({
             "title": f"{row['Name']} - {row['Description']}",
             "start": start_datetime.isoformat(),
@@ -33,34 +46,52 @@ def show_patient_calendar():
 
     # 📆 Kalender anzeigen
     calendar_options = {
-        "initialView": "timeGridWeek",  # Oder "dayGridMonth", "timeGridDay"
+        "initialView": "timeGridWeek",
         "editable": False,
-        "selectable": False,
+        "selectable": True,
     }
-    calendar(events=events, options=calendar_options)
-
-    st.markdown("---")
+    selected_event = calendar(events=events, options=calendar_options)
 
     # ➕ Formular für neuen Termin
     with st.form("Neuen Termin hinzufügen"):
+        st.markdown("### Neuer Termin")
         name = st.text_input("Name des Patienten")
         datum = st.date_input("Datum", value=date.today())
         uhrzeit = st.time_input("Uhrzeit", value=datetime.now().time())
-        beschreibung = st.text_input("Beschreibung")
+        beschreibung = st.text_input("Kurzdoku")
+
         submitted = st.form_submit_button("🆕 Termin hinzufügen")
 
         if submitted:
             if name and beschreibung:
-                new_entry = {
-                    "Name": name,
-                    "Date": datum.strftime("%Y-%m-%d"),
-                    "Time": uhrzeit.strftime("%H:%M"),
-                    "Description": beschreibung
-                }
-                st.session_state.patient_data = pd.concat([
-                    st.session_state.patient_data,
-                    pd.DataFrame([new_entry])
-                ], ignore_index=True)
+                # Dummy-Patient for calendar-added session
+                dummy_patient = Patient(
+                    ID="dummy",
+                    Name=name,
+                    Vorname="",
+                    Geburtsdatum="",
+                    Straße="",
+                    Hausnummer=0,
+                    Postleitzahl=0,
+                    Stadt="",
+                    Versicherung="",
+                    Zusatzversicherung=False,
+                    Arzt="",
+                    email="",
+                    Telefon=0
+                )
+
+                new_session = TherapySession(
+                    date=datum.strftime("%Y-%m-%d"),
+                    tendency="",
+                    patient=dummy_patient.Name,
+                    timestamp=datetime.now().strftime("%Y%m%d%H%M%S%f"),
+                    documentation=beschreibung
+                )
+                st.session_state.therapy_sessions.append(new_session)
                 st.success("✅ Termin erfolgreich hinzugefügt!")
-            else:
-                st.error("❌ Bitte alle Felder ausfüllen.")
+
+    # 📎 Optional: Zeige ausgewähltes Ereignis an
+    if selected_event:
+        st.info("Ausgewähltes Ereignis:")
+        st.json(selected_event)

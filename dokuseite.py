@@ -2,12 +2,14 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from datetime import datetime
 #from streamlit import experimental_rerun 
-
+from patientenkalender import show_patient_calendar
 # Set page config
 st.set_page_config(layout="wide")
 from Patientenseite_pietschi.backend_patientenseite import TherapySession,  Patient
 from Patientenseite_pietschi.backend_patientenseite import add_therapy_session, get_numeric_tendency
 
+if "therapy_sessions" not in st.session_state:
+    st.session_state.therapy_sessions = []
 
 #
 mein_patient = Patient(
@@ -22,7 +24,8 @@ mein_patient = Patient(
     Zusatzversicherung=True,
     Arzt="Dr. Schmidt",
     email="hannobert.neini@example.com",
-    Telefon=1234567890
+    Telefon=1234567890,
+    ID= 1
 )
 
 ## Layout Load CSS
@@ -81,14 +84,12 @@ with right_col:
         args=(mein_patient,)
     )
 
-    for idx, session in enumerate(st.session_state.therapy_session):
-        expander_label = f"Therapie-Sitzung {session.date}"
+    for idx, session in enumerate(st.session_state.therapy_sessions):
+        expander_label = f"Therapiesitzung {session.date}"
         with st.expander(expander_label):
             with st.form(key=f"form_{session.timestamp}"):
-                st.write('''
-                    Dokumentiere die heutige Therapieeinheit. Vergiss nicht das pre- and post-Testing und die Tendenz der Therapie zu notieren.
-                ''')
-
+                st.write(f"Tendenz: {session.tendency}")
+                st.write(f"Dokumentation: {session.documentation}")
                 st.text_input("Datum:", value=session.date, disabled=True)
 
                 tendency_option = st.selectbox(
@@ -107,11 +108,13 @@ with right_col:
                 )
 
                 submitted = st.form_submit_button("Speichern")
+
                 if submitted:
                     session.tendency = tendency_option
                     session.documentation = documentation
                     st.success(f"Änderungen gespeichert!")
                     st.rerun()
+
 
 if __name__ == "__main__":
     pass

@@ -13,29 +13,6 @@ def get_numeric_tendency(tendency):
     tendency_map = {"Steigend": 1, "Stagnierend": 0, "Fallend": -1}
     return tendency_map.get(tendency, None)
 
-# %%
-def plot_tendency_over_time(tendencies, dates):
-    # Map tendencies to numeric values for plotting
-    tendency_map = {"Steigend": 1, "Stagnierend": 0, "Fallend": -1}
-    numeric_tendencies = [tendency_map.get(t, 0) for t in tendencies]
-
-    # Convert dates to pandas datetime if not already
-    df = pd.DataFrame({
-        "Datum": pd.to_datetime(dates),
-        "Tendenz": numeric_tendencies
-    })
-
-    fig, ax = plt.subplots()
-    ax.plot(df["Datum"], df["Tendenz"], marker='o')
-    ax.set_yticks([-1, 0, 1])
-    ax.set_yticklabels(["Fallend", "Stagnierend", "Steigend"])
-    ax.set_xlabel("Datum")
-    ax.set_ylabel("Tendenz")
-    ax.set_title("Tendenz über die Zeit")
-    plt.tight_layout()
-    st.pyplot(fig)
-
-plt.show()
 
 #%% 
 def add_therapy_session(patient):
@@ -43,17 +20,20 @@ def add_therapy_session(patient):
     today = datetime.now().strftime("%Y-%m-%d")
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S%f")
 
-    existing_dates = [session.date for session in st.session_state.therapy_session]
+    if "therapy_sessions" not in st.session_state:
+        st.session_state.therapy_sessions = []
+
+    existing_dates = [session.date for session in st.session_state.therapy_sessions]
     if today in existing_dates:
         st.warning("Für heute wurde bereits eine Therapiesitzung erfasst.")
     else:
         new_session = TherapySession(
             date=today,
             tendency="",
-            patient=patient.Name,  # ✅ Zugriff über Instanz
+            patient=patient.Name,
             timestamp=timestamp
         )
-        st.session_state.therapy_session.append(new_session)
+        st.session_state.therapy_sessions.append(new_session)
         st.success(f"Neue Therapiesitzung für {today} hinzugefügt!")
         st.rerun()
 
