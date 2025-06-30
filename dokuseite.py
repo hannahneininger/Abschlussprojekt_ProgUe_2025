@@ -1,7 +1,7 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-from datetime import datetime
 from Patientenseite_pietschi.backend_patientenseite import TherapySession, Patient, add_therapy_session, get_numeric_tendency, delete_therapy_session
+
 
 # Initialisiere die Therapiesitzungen nur einmal
 if "therapy_sessions" not in st.session_state:
@@ -27,6 +27,12 @@ mein_patient = Patient(
 st.set_page_config(layout="wide")
 
 left_col, right_col = st.columns([1, 3], gap="large")
+
+# def local_css(file_name):
+#     with open(file_name) as f:
+#         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+# local_css("layout.css")
 
 # Linke Spalte: Patientendaten
 with left_col:
@@ -111,7 +117,7 @@ with right_col:
                     if submitted:
                         session.tendency = tendency_option
                         session.documentation = documentation
-                        st.success("✅ Änderungen gespeichert!")
+                        st.markdown('<div class="success-message">✅ Änderungen gespeichert!</div>', unsafe_allow_html=True)
                         st.rerun()
 
             with col2:

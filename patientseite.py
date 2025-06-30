@@ -22,4 +22,4 @@ def show_patients_list(patients):
         st.write(f"**Name:** {patient['name']} | **ID:** {patient['id']}")
         st.markdown("---")  # Separator for each patient
 
-def create_patient():
+#def create_patient():

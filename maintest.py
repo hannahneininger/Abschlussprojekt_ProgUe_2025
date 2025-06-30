@@ -3,7 +3,6 @@ from patientenkalender import show_patient_calendar
 from patientseite import searchbar
 from patientseite import show_patients_list
 
-
 # Initialisiere Session State für den Modus und die Stage
 if 'mode' not in st.session_state:
     st.session_state.mode = None
