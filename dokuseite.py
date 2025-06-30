@@ -64,7 +64,6 @@ with right_col:
     st.header("Therapiedokumentation")
     st.write("")
 
-    # Button: Neue Therapiesitzung hinzufügen
     st.button(
         "Therapie-Sitzung hinzufügen",
         key="add_session",
@@ -72,17 +71,19 @@ with right_col:
         args=(mein_patient,)
     )
 
-    # Zeige alle Therapiesitzungen an
     for idx, session in enumerate(st.session_state.therapy_sessions):
+        # Sicherstellen, dass es wirklich eine TherapySession ist
+        if not isinstance(session, TherapySession):
+            st.error(f"Fehler: Ungültiger Sitzungs-Typ in session_state gefunden! Typ: {type(session)}")
+            continue
         displayed_date = getattr(session, 'displayed_date', session.date)
         expander_label = f"Therapie-Sitzung {displayed_date}"
 
         with st.expander(expander_label):
-            # Layout: Form + Delete button side by side
             col1, col2 = st.columns([4, 1])
 
             with col1:
-                st.text_input("Datum:", value=displayed_date, disabled=True)
+                st.text_input("Datum:", value=session.displayed_date, disabled=True)
 
                 with st.form(key=f"form_{session.timestamp}"):
                     tendency_option = st.selectbox(
@@ -99,12 +100,11 @@ with right_col:
                         key=f"text_area_{session.timestamp}"
                     )
 
-                    # Use columns inside the form to align buttons
                     btn_col1, btn_col2 = st.columns([1, 1])
                     with btn_col1:
                         submitted = st.form_submit_button("Speichern")
                     with btn_col2:
-                        if st.form_submit_button("🗑️ Löschen"):
+                        if st.form_submit_button("Löschen"):
                             delete_therapy_session(idx)
                             st.rerun()
 
@@ -115,7 +115,6 @@ with right_col:
                         st.rerun()
 
             with col2:
-                # Optional: Add more actions here or keep empty
-                pass
+                pass  # Optional: weitere Aktionen
 
                
