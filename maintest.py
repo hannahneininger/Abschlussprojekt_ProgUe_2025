@@ -1,7 +1,8 @@
 import streamlit as st
 from patientenkalender import show_patient_calendar
 from patientseite import suche_patienten, searchbar, suche_patienten, zeige_suchergebnisse
-from patientseite import zeige_patientenliste, neuen_patient_hinzufuegen
+from patientseite import zeige_patientenliste, neuen_patient_hinzufuegen, lade_patienten, speichere_patienten
+
 
 # Initialisiere Session State für den Modus und die Stage
 if 'mode' not in st.session_state:
@@ -75,6 +76,10 @@ elif st.session_state.mode == 'patient':
                 
     neuen_patient_hinzufuegen()
     zeige_patientenliste()
+    lade_patienten()
+    speichere_patienten(patientenliste=st.session_state.patientenliste)
+    
+
     st.button("Zurück zum Hauptmenü", on_click=go_back)
 
 elif st.session_state.mode == 'kalender':

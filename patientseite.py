@@ -1,5 +1,8 @@
 import streamlit as st
 import datetime
+import json
+import datetime
+import os
 
 
 def searchbar():
@@ -75,6 +78,8 @@ def zeige_patientenliste():
 min_date = datetime.date(1900, 1, 1)
 max_date = datetime.date.today()
 
+PATIENTEN_JSON = "patienten.json"
+
 def neuen_patient_hinzufuegen():
     with st.form("neuer_patient_form"):
         st.subheader("Neuen Patienten hinzufügen")
@@ -107,6 +112,7 @@ def neuen_patient_hinzufuegen():
                 patient_id = st.session_state.next_patient_id
                 st.session_state.next_patient_id += 1  # Erhöhe für nächsten Patienten
                
+                
                 neuer_patient = Patient(
                     ID =patient_id,
                     Vorname=Vorname,
@@ -123,6 +129,45 @@ def neuen_patient_hinzufuegen():
                     Telefon=Telefon
                 )
                 st.session_state.patientenliste.append(neuer_patient)
+                speichere_patienten(st.session_state.patientenliste)
                 st.success(f"Patient {Vorname} {Name} wurde hinzugefügt.")
+
+# Dateipfad für die JSON-Datei
+
+
+
+    if st.button("Patientenliste exportieren"):
+        speichere_patienten(st.session_state.patientenliste)
+        with open(PATIENTEN_JSON, "r") as f:
+            st.download_button("Download JSON", f, file_name="patienten.json")
+
+def lade_patienten():
+    if os.path.exists(PATIENTEN_JSON):
+        with open(PATIENTEN_JSON, "r", encoding="utf-8") as f:
+            try:
+                data = json.load(f)
+                return [Patient.from_dict(p) for p in data]
+            except Exception as e:
+                st.warning("Fehler beim Laden der Patientendaten.")
+                return []
+    return []
+
+# Funktion: Liste speichern
+def speichere_patienten(patientenliste):
+    with open(PATIENTEN_JSON, "w", encoding="utf-8") as f:
+        json.dump([p.to_dict() for p in patientenliste], f, indent=4, ensure_ascii=False)
+
+# Initialisiere session_state
+if 'patientenliste' not in st.session_state:
+    st.session_state.patientenliste = lade_patienten()
+
+if 'next_patient_id' not in st.session_state:
+    if st.session_state.patientenliste:
+        st.session_state.next_patient_id = max(p.ID for p in st.session_state.patientenliste) + 1
+    else:
+        st.session_state.next_patient_id = 1
+
+
 # Zeige Liste an
+
 #zeige_patientenliste()

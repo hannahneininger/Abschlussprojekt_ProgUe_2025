@@ -72,6 +72,9 @@ class TherapySession:
 
     def _repr_(self):
         return f"TherapySession(date={self.date}, tendency={self.tendency}, patient={self.patient})"
+
+
+PATIENTEN_JSON = "patienten.json"
     
 # create a class Patient wich has the Attributes: Name = str, Vorname= str, Geburtsdatum= str, Straße= str, Hausnummer= int, PLZ= int, Stadt= str, Versicherung= str, Zusatzversicherung= True/False, Arzt= str, email= str, Telefon= int
 class Patient:
@@ -98,3 +101,25 @@ class Patient:
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, Geburtsdatum={self.Geburtsdatum}, "
                 f"Versicherung={self.Versicherung}, Zusatzversicherung={self.Zusatzversicherung}, "
                 f"Arzt={self.Arzt}, email={self.email}, Telefon={self.Telefon})")
+    
+    def to_dict(self):
+        return {
+            "ID": self.ID,
+            "Vorname": self.Vorname,
+            "Name": self.Name,
+            "Geburtsdatum": self.Geburtsdatum,
+            "Straße": self.Straße,
+            "Hausnummer": self.Hausnummer,
+            "Postleitzahl": self.Postleitzahl,
+            "Stadt": self.Stadt,
+            "Versicherung": self.Versicherung,
+            "Zusatzversicherung": self.Zusatzversicherung,
+            "Arzt": self.Arzt,
+            "email": self.email,
+            "Telefon": self.Telefon
+        }
+
+    @staticmethod
+    def from_dict(data):
+        return Patient(**data)
+
