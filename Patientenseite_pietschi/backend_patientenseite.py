@@ -13,64 +13,58 @@ def get_numeric_tendency(tendency):
     tendency_map = {"Steigend": 1, "Stagnierend": 0, "Fallend": -1}
     return tendency_map.get(tendency, None)
 
-# %%
-def plot_tendency_over_time(tendencies, dates):
-    # Map tendencies to numeric values for plotting
-    tendency_map = {"Steigend": 1, "Stagnierend": 0, "Fallend": -1}
-    numeric_tendencies = [tendency_map.get(t, 0) for t in tendencies]
 
-    # Convert dates to pandas datetime if not already
-    df = pd.DataFrame({
-        "Datum": pd.to_datetime(dates),
-        "Tendenz": numeric_tendencies
-    })
-
-    fig, ax = plt.subplots()
-    ax.plot(df["Datum"], df["Tendenz"], marker='o')
-    ax.set_yticks([-1, 0, 1])
-    ax.set_yticklabels(["Fallend", "Stagnierend", "Steigend"])
-    ax.set_xlabel("Datum")
-    ax.set_ylabel("Tendenz")
-    ax.set_title("Tendenz über die Zeit")
-    plt.tight_layout()
-    st.pyplot(fig)
-
-plt.show()
 
 #%% 
 def add_therapy_session(patient):
-    """Add a new therapy session with today's date."""
+    """Add a new therapy session with today's date or versioned duplicate if one exists."""
     today = datetime.now().strftime("%Y-%m-%d")
+
+    # Count how many sessions already exist for today
+    existing_sessions = [s for s in st.session_state.therapy_sessions if s.date.startswith(today)]
+
+    next_version = len(existing_sessions) + 1
+
+    # Use versioned date if more than one session exists
+    if next_version > 1:
+        displayed_date = f"{today} ({next_version})"
+    else:
+        displayed_date = today
+
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S%f")
 
-    existing_dates = [session.date for session in st.session_state.therapy_session]
-    if today in existing_dates:
-        st.warning("Für heute wurde bereits eine Therapiesitzung erfasst.")
-    else:
-        new_session = TherapySession(
-            date=today,
-            tendency="",
-            patient=patient.Name,  # ✅ Zugriff über Instanz
-            timestamp=timestamp
-        )
-        st.session_state.therapy_session.append(new_session)
-        st.success(f"Neue Therapiesitzung für {today} hinzugefügt!")
-        st.rerun()
+    new_session = TherapySession(
+    date=today,
+    displayed_date=displayed_date,  # <-- Add this line
+    tendency="",
+    patient=patient.Name,
+    timestamp=timestamp,
+    documentation=""
+)
 
+    st.session_state.therapy_sessions.append(new_session)
+    st.success(f"✅ Neue Therapiesitzung hinzugefügt: {displayed_date}")
+
+def delete_therapy_session(index):
+    """Löscht die Therapiesitzung am gegebenen Index."""
+    st.session_state.therapy_sessions.pop(index)
+    st.rerun()
+    
 # %%
 #create an empty list of dates which can later on be filled with the dates of therapy sessions
 def create_empty_dates_list():
     return []
 
 class TherapySession:
-    def __init__(self, date, tendency, patient, timestamp=None, documentation=""):
+    def __init__(self, date, displayed_date, tendency, patient, timestamp=None, documentation=""):
         self.date = date
+        self.displayed_date = displayed_date
         self.tendency = tendency
         self.patient = patient
         self.timestamp = timestamp or datetime.now().strftime("%Y%m%d%H%M%S%f")
-        self.documentation = documentation  # Unique per session
+        self.documentation = documentation
 
-    def _repr_(self):
+    def __repr__(self):
         return f"TherapySession(date={self.date}, tendency={self.tendency}, patient={self.patient})"
     
 # create a class Patient wich has the Attributes: Name = str, Vorname= str, Geburtsdatum= str, Straße= str, Hausnummer= int, PLZ= int, Stadt= str, Versicherung= str, Zusatzversicherung= True/False, Arzt= str, email= str, Telefon= int
