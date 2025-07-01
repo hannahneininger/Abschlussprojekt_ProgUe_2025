@@ -123,11 +123,7 @@ def delete_therapy_session(index):
     st.session_state.therapy_sessions.pop(index)
     st.rerun()
 
-    def __repr__(self):
-        return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, Geburtsdatum={self.Geburtsdatum}, "
-                f"Versicherung={self.Versicherung}, Zusatzversicherung={self.Zusatzversicherung}, "
-        )
-
+    
 
     @staticmethod
     def from_dict(data):

@@ -2,35 +2,40 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from Patientenseite_pietschi.backend_patientenseite import TherapySession, Patient, add_therapy_session, get_numeric_tendency, delete_therapy_session
 
-
-
-
 from datetime import datetime
 #from streamlit import experimental_rerun 
 from patientenkalender import show_patient_calendar
-# Set page config
 
 
 
 
 if "therapy_sessions" not in st.session_state:
     st.session_state.therapy_sessions = []
-def show_therapy_page(mein_patient):
-    """Zeigt die Therapiedokumentation für den ausgewählten Patienten an."""
+
+  
+def show_therapy_page(mein_patient=None):
     
-    # Dummy-Patient
-    if 'selected_patient' in st.session_state:
-        mein_patient = st.session_state.selected_patient
-    else:
-        st.error("Kein Patient ausgewählt.")
-        if st.button("⬅️ Zurück zur Liste"):
-            st.session_state.modus = "patientenliste"
-            st.rerun()
-        st.stop()
+    print("Hallo")
+    """Zeigt die Therapiedokumentation für den ausgewählten Patienten an."""
+    if mein_patient is None:
+        mein_patient = Patient(
+            Name="Mustermann",
+            Vorname="Max",
+            Geburtsdatum="01.01.1980",
+            Straße="Musterstraße",
+            Hausnummer="1",
+            Postleitzahl="12345",
+            Stadt="Musterstadt",
+            Versicherung="AOK",
+            Arzt="Dr. med. Beispiel"
+        )
+        st.info("Es wird ein Testpatient angezeigt.")
 
-    # Set page config
-    st.set_page_config(layout="wide")
+    
+    
+    st.title(f"Therapiedokumentation für {mein_patient.Vorname} {mein_patient.Name}")
 
+    # Spaltenlayout
     left_col, right_col = st.columns([1, 3], gap="large")
 
     # def local_css(file_name):
@@ -38,7 +43,6 @@ def show_therapy_page(mein_patient):
     #         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
     # local_css("layout.css")
-
     # Linke Spalte: Patientendaten
     with left_col:
         st.markdown("### Patientendaten")
@@ -70,7 +74,7 @@ def show_therapy_page(mein_patient):
         else:
             st.write("Keine Tendenzen gespeichert.")
 
-    # Rechte Spalte: Therapiedokumentation
+        # Rechte Spalte: Therapiedokumentation
     with right_col:
         st.header("Therapiedokumentation")
         st.write("")
@@ -84,7 +88,7 @@ def show_therapy_page(mein_patient):
 
         for idx, session in enumerate(st.session_state.therapy_sessions):
 
-            # Sicherstellen, dass es wirklich eine TherapySession ist
+                # Sicherstellen, dass es wirklich eine TherapySession ist
             if not isinstance(session, TherapySession):
                 st.error(f"Fehler: Ungültiger Sitzungs-Typ in session_state gefunden! Typ: {type(session)}")
                 continue
@@ -99,7 +103,7 @@ def show_therapy_page(mein_patient):
 
                     with st.form(key=f"form_{session.timestamp}"):
                         tendency_option = st.selectbox(
-                            "Tendenz auswählen",
+                        "Tendenz auswählen",
                             options=["", "Steigend", "Fallend", "Stagnierend"],
                             index=["", "Steigend", "Fallend", "Stagnierend"].index(session.tendency),
                             key=f"selectbox_{session.timestamp}"
@@ -111,7 +115,6 @@ def show_therapy_page(mein_patient):
                             height=150,
                             key=f"text_area_{session.timestamp}"
                         )
-
                         btn_col1, btn_col2 = st.columns([1, 1])
                         with btn_col1:
                             submitted = st.form_submit_button("Speichern")
@@ -125,14 +128,13 @@ def show_therapy_page(mein_patient):
                             session.documentation = documentation
                             st.markdown('<div class="success-message">✅ Änderungen gespeichert!</div>', unsafe_allow_html=True)
                             st.rerun()
-
                 with col2:
                     pass  # Optional: weitere Aktionen
 
-                
-
-
-
+                    
 if __name__ == "__main__":
-    pass
+    show_therapy_page()
+
+
+    
 

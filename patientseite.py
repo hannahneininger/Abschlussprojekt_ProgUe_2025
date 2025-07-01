@@ -2,6 +2,8 @@ import streamlit as st
 import datetime
 import json
 import os
+from dokuseite import show_therapy_page
+
 
 from Patientenseite_pietschi.backend_patientenseite import Patient
 
@@ -9,6 +11,13 @@ PATIENTEN_JSON = os.getenv("PATIENT_JSON_FILE", "patienten.json")
 
 from dokuseite import show_therapy_page
 
+
+if 'modus' not in st.session_state:
+    st.session_state.modus = None
+
+# Initialisiere Session State für den Modus und die Stage
+if 'mode' not in st.session_state:
+    st.session_state.mode = None
 
 def searchbar():
     """
@@ -96,8 +105,10 @@ def zeige_patientenliste():
         with col2:
             if st.button(f"Auswählen", key=f"btn_select_{idx}"):
                 st.session_state.selected_patient = patient
-                st.session_state.modus = "therapie_dokumentation"
+                st.session_state.mode = "therapie_dokumentation"
+                show_therapy_page(patient)
                 st.rerun()
+        # Button zum Löschen des Patienten      
 
         with col3:
             if st.button(f"Löschen", key=f"btn_delete_{idx}"):
@@ -192,4 +203,5 @@ if 'next_patient_id' not in st.session_state:
     else:
         st.session_state.next_patient_id = 1
 
+    
 
