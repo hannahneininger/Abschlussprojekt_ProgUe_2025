@@ -54,8 +54,37 @@ def show_patient_calendar():
 
     # ➕ Formular für neuen Termin
     with st.form("Neuen Termin hinzufügen"):
-        st.markdown("### Neuer Termin")
-        name = st.text_input("Name des Patienten")
+        ausgewaehlter_patient = None  # <- Wichtig: Definiere die Variable hier!
+        
+        if not st.session_state.patientenliste:
+            st.warning("Keine Patienten vorhanden. Bitte fügen Sie zuerst einen Patienten hinzu.")
+            name = st.text_input("Name des Patienten")
+        else:
+            # Liste von Anzeigetexten generieren
+            patienten_auswahl = [
+                f"{p.Vorname} {p.Name} (ID: {p.ID})" for p in st.session_state.patientenliste
+            ]
+            ausgewaehlter_patient = st.selectbox(
+                "Wähle einen Patienten",
+                options=patienten_auswahl,
+                index=None,
+                placeholder="Patient auswählen..."
+            )
+
+            if ausgewaehlter_patient:
+                # Extrahiere ID
+                patient_id = int(ausgewaehlter_patient.split("ID: ")[1].strip(")"))
+                selected_patient = next((p for p in st.session_state.patientenliste if p.ID == patient_id), None)
+
+                if selected_patient:
+                    name = f"{selected_patient.Vorname} {selected_patient.Name}"
+                else:
+                    name = ""
+                    st.error("❌ Patient konnte nicht gefunden werden.")
+            else:
+                name = ""
+            
+        
         datum = st.date_input("Datum", value=date.today())
         uhrzeit = st.time_input("Uhrzeit", value=datetime.now().time())
         beschreibung = st.text_input("Kurzdoku")

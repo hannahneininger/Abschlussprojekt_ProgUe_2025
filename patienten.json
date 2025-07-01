@@ -1,0 +1,17 @@
+[
+    {
+        "ID": 1,
+        "Vorname": "Hanno",
+        "Name": "Neini",
+        "Geburtsdatum": "2025-07-01",
+        "Straße": "",
+        "Hausnummer": "",
+        "Postleitzahl": "",
+        "Stadt": "",
+        "Versicherung": "",
+        "Zusatzversicherung": "",
+        "Arzt": "",
+        "email": "",
+        "Telefon": ""
+    }
+]
