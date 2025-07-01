@@ -86,9 +86,9 @@ def zeige_patientenliste():
     if len(st.session_state.patientenliste) == 0:
         st.info("Keine Patienten vorhanden.")
         return
-    
+
     for idx, patient in enumerate(st.session_state.patientenliste):
-        col1, col2 = st.columns([4, 1])
+        col1, col2, col3 = st.columns([4, 1, 1])  # Drei Spalten
 
         with col1:
             st.markdown(f"**{patient.Vorname} {patient.Name}**")
@@ -96,10 +96,15 @@ def zeige_patientenliste():
         with col2:
             if st.button(f"Auswählen", key=f"btn_select_{idx}"):
                 st.session_state.selected_patient = patient
-
-
                 st.session_state.modus = "therapie_dokumentation"
+                st.rerun()
 
+        with col3:
+            if st.button(f"Löschen", key=f"btn_delete_{idx}"):
+                # Frage bestätigung
+                del st.session_state.patientenliste[idx]
+                speichere_patienten(st.session_state.patientenliste)
+                st.success("Patient gelöscht.")
                 st.rerun()
 
         st.markdown("---")
@@ -187,8 +192,4 @@ if 'next_patient_id' not in st.session_state:
     else:
         st.session_state.next_patient_id = 1
 
-
-# Zeige Liste an
-
-#zeige_patientenliste()
 

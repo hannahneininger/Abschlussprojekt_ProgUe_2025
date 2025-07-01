@@ -22,8 +22,7 @@ PATIENTEN_JSON = "patienten.json"
     
 
 class Patient:
-
-    #def __init__(self, ID, Name, Vorname, Geburtsdatum, Straße, Hausnummer, Postleitzahl, Stadt, Versicherung, Zusatzversicherung, Arzt, email, Telefon):
+    """Represents a patient with various attributes. mit kwargs damit man flexibel beim Erstellen von Patienten ist."""
     def __init__(self, **kwargs):
         self.ID = kwargs.get('ID', -1)
         self.Name = kwargs.get('Name', '')
@@ -127,9 +126,11 @@ def delete_therapy_session(index):
     def __repr__(self):
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, Geburtsdatum={self.Geburtsdatum}, "
                 f"Versicherung={self.Versicherung}, Zusatzversicherung={self.Zusatzversicherung}, "
+        )
 
 
     @staticmethod
     def from_dict(data):
         return Patient(**data)
+
 

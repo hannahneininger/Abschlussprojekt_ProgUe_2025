@@ -1,8 +1,8 @@
 [
     {
         "ID": 1,
-        "Name": "Pietschmann",
         "Vorname": "Julia",
+        "Name": "Pietschmann",
         "Geburtsdatum": "1997-07-02",
         "Stra\u00dfe": "Speckbacherstrasse",
         "Hausnummer": "9",
@@ -16,8 +16,8 @@
     },
     {
         "ID": 2,
-        "Name": "Neininger",
         "Vorname": "Hannah",
+        "Name": "Neininger",
         "Geburtsdatum": "2000-12-18",
         "Stra\u00dfe": "Haymongasse",
         "Hausnummer": "16",

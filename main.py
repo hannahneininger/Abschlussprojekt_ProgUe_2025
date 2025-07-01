@@ -1,6 +1,5 @@
 
 import streamlit as st
-st.set_page_config(layout="wide")
 from patientenkalender import show_patient_calendar
 
 from patientenkalender import show_patient_calendar
@@ -15,6 +14,8 @@ from patientseite import (
 )
 from dokuseite import show_therapy_page
 
+
+st.set_page_config(layout="wide")
 
 # Initialisiere Session State für den Modus und die Stage
 if 'mode' not in st.session_state:
