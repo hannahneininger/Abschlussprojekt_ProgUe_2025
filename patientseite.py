@@ -3,7 +3,7 @@ import datetime
 import json
 import datetime
 import os
-
+from dokuseite import show_therapy_page
 
 def searchbar():
     """
@@ -70,7 +70,8 @@ def zeige_patientenliste():
         with col2:
             if st.button(f"Auswählen", key=f"btn_selcet_{idx}"):
                 st.session_state.selected_patient = patient
-                st.experimental_rerun()
+                st.session_state.modus = "therapie_dokumentation"
+                st.rerun()
 
         st.markdown("---")
 
