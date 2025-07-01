@@ -17,6 +17,10 @@ from dokuseite import show_therapy_page
 
 st.set_page_config(layout="wide")
 
+
+if 'modus' not in st.session_state:
+    st.session_state.modus = None
+
 # Initialisiere Session State für den Modus und die Stage
 if 'mode' not in st.session_state:
     st.session_state.mode = None
@@ -96,25 +100,11 @@ elif st.session_state.mode == 'patient':
 elif st.session_state.mode == 'kalender':
         show_patient_calendar()
         st.button("Zurück zum Hauptmenü", on_click=go_back, key="back_main_menu_calendar")
-    # Zurück-Button
+    
 
-
-        st.button("Zurück zum Hauptmenü", on_click=go_back, key="back_main_menu_calendar")
-
-        
 
 elif st.session_state.mode == 'therapie_dokumentation':
-    from dokuseite import show_therapy_page
-
-    if 'selected_patient' in st.session_state:
-        show_therapy_page(st.session_state.selected_patient)
-
-        if st.button("⬅️ Zurück zur Patientenliste"):
-            st.session_state.mode = 'patient'
-            st.rerun()
-    else:
-        st.error("Kein Patient ausgewählt.")
-        if st.button("Zurück zur Patientenliste"):
-            st.session_state.mode = 'patient'
-            st.rerun()
-
+    patient = st.session_state.selected_patient
+    patient = st.session_state.get('selected_patient', None)
+    show_therapy_page(patient)
+    
