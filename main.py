@@ -1,6 +1,8 @@
 
 import streamlit as st
+st.set_page_config(layout="wide")
 from patientenkalender import show_patient_calendar
+
 from patientenkalender import show_patient_calendar
 from patientseite import (
     suche_patienten,
@@ -11,6 +13,7 @@ from patientseite import (
     lade_patienten,
     speichere_patienten
 )
+from dokuseite import show_therapy_page
 
 
 # Initialisiere Session State für den Modus und die Stage
@@ -25,7 +28,7 @@ if 'suchmodus' not in st.session_state:
     st.session_state.suchmodus = True  # Optional: Starte direkt im Suchmodus
 
 if 'patientenliste' not in st.session_state:
-    st.session_state.patientenliste = []
+    st.session_state.patientenliste = lade_patienten()
 
 
 # Funktion zum Setzen des Modus
@@ -94,4 +97,23 @@ elif st.session_state.mode == 'kalender':
         st.button("Zurück zum Hauptmenü", on_click=go_back, key="back_main_menu_calendar")
     # Zurück-Button
 
+
         st.button("Zurück zum Hauptmenü", on_click=go_back, key="back_main_menu_calendar")
+
+        
+
+elif st.session_state.mode == 'therapie_dokumentation':
+    from dokuseite import show_therapy_page
+
+    if 'selected_patient' in st.session_state:
+        show_therapy_page(st.session_state.selected_patient)
+
+        if st.button("⬅️ Zurück zur Patientenliste"):
+            st.session_state.mode = 'patient'
+            st.rerun()
+    else:
+        st.error("Kein Patient ausgewählt.")
+        if st.button("Zurück zur Patientenliste"):
+            st.session_state.mode = 'patient'
+            st.rerun()
+

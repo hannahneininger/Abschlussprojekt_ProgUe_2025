@@ -68,6 +68,23 @@ class Patient:
         return cls(**normalized)
     
 
+    def to_dict(self):
+        return {
+            "ID": self.ID,
+            "Vorname": self.Vorname,
+            "Name": self.Name,
+            "Geburtsdatum": self.Geburtsdatum,
+            "Straße": self.Straße,
+            "Hausnummer": self.Hausnummer,
+            "Postleitzahl": self.Postleitzahl,
+            "Stadt": self.Stadt,
+            "Versicherung": self.Versicherung,
+            "Zusatzversicherung": self.Zusatzversicherung,
+            "Arzt": self.Arzt,
+            "email": self.email,
+            "Telefon": self.Telefon
+        }
+
 def create_tendency_dropdown():
     tendency_options = ["Steigend", "Fallend", "Stagnierend"]
     tendency = st.selectbox("Tendenz auswählen", tendency_options)
@@ -110,5 +127,9 @@ def delete_therapy_session(index):
     def __repr__(self):
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, Geburtsdatum={self.Geburtsdatum}, "
                 f"Versicherung={self.Versicherung}, Zusatzversicherung={self.Zusatzversicherung}, "
-                f"Arzt={self.Arzt}, email={self.email}, Telefon={self.Telefon})")
-    
+
+
+    @staticmethod
+    def from_dict(data):
+        return Patient(**data)
+

@@ -2,9 +2,13 @@ import streamlit as st
 import datetime
 import json
 import os
+
 from Patientenseite_pietschi.backend_patientenseite import Patient
 
 PATIENTEN_JSON = os.getenv("PATIENT_JSON_FILE", "patienten.json")
+
+from dokuseite import show_therapy_page
+
 
 def searchbar():
     """
@@ -92,6 +96,10 @@ def zeige_patientenliste():
         with col2:
             if st.button(f"Auswählen", key=f"btn_select_{idx}"):
                 st.session_state.selected_patient = patient
+
+
+                st.session_state.modus = "therapie_dokumentation"
+
                 st.rerun()
 
         st.markdown("---")
