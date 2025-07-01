@@ -3,6 +3,7 @@ from patientenkalender import show_patient_calendar
 from patientseite import suche_patienten, searchbar, suche_patienten, zeige_suchergebnisse
 from patientseite import zeige_patientenliste, neuen_patient_hinzufuegen
 
+
 # Initialisiere Session State für den Modus und die Stage
 if 'mode' not in st.session_state:
     st.session_state.mode = None
@@ -81,4 +82,8 @@ elif st.session_state.mode == 'kalender':
         show_patient_calendar()
         st.button("Zurück zum Hauptmenü", on_click=go_back)
     # Zurück-Button
-    #st.button("Zurück zum Hauptmenü", on_click=go_back)
+
+    st.button("Zurück zum Hauptmenü", on_click=go_back)
+
+   
+

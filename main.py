@@ -45,14 +45,12 @@ st.markdown("""
 def go_back():
     st.session_state.button_clicked = None
 
-
 # Anzeige je nach Auswahl
 if st.session_state.mode == 'patient' and st.session_state.stage == 1:
     suche_patienten()
 elif st.session_state.mode == 'kalender' and st.session_state.stage == 1:
     show_patient_calendar()
     st.button("Zurück zum Hauptmenü", on_click=go_back)
-
 
 
 
