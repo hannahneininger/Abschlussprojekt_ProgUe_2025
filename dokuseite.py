@@ -4,6 +4,15 @@ from Patientenseite_pietschi.backend_patientenseite import TherapySession, Patie
 
 
 # Initialisiere die Therapiesitzungen nur einmal
+
+from datetime import datetime
+#from streamlit import experimental_rerun 
+from patientenkalender import show_patient_calendar
+# Set page config
+st.set_page_config(layout="wide")
+
+
+
 if "therapy_sessions" not in st.session_state:
     st.session_state.therapy_sessions = []
 
@@ -20,7 +29,8 @@ mein_patient = Patient(
     Zusatzversicherung=True,
     Arzt="Dr. Schmidt",
     email="hannobert.neini@example.com",
-    Telefon=1234567890
+    Telefon=1234567890,
+    ID= 1
 )
 
 # Set page config
@@ -78,6 +88,7 @@ with right_col:
     )
 
     for idx, session in enumerate(st.session_state.therapy_sessions):
+
         # Sicherstellen, dass es wirklich eine TherapySession ist
         if not isinstance(session, TherapySession):
             st.error(f"Fehler: Ungültiger Sitzungs-Typ in session_state gefunden! Typ: {type(session)}")
@@ -124,3 +135,9 @@ with right_col:
                 pass  # Optional: weitere Aktionen
 
                
+
+
+
+if __name__ == "__main__":
+    pass
+
