@@ -1,28 +1,34 @@
+
 import streamlit as st
 from patientenkalender import show_patient_calendar
-from patientseite import suche_patienten  
+from patientseite import suche_patienten, searchbar, suche_patienten, zeige_suchergebnisse
+from patientseite import zeige_patientenliste, neuen_patient_hinzufuegen
 
 
-# Hauptmenü für T-Doc
-
-st.title("T-Doc: Hauptmenü")
-if 'stage' not in st.session_state:
-    st.session_state.stage = 0
+# Initialisiere Session State für den Modus und die Stage
 if 'mode' not in st.session_state:
     st.session_state.mode = None
 
+# Initialisiere selected_patient
+if 'selected_patient' not in st.session_state:
+    st.session_state.selected_patient = None
+
+if 'suchmodus' not in st.session_state:
+    st.session_state.suchmodus = True  # Optional: Starte direkt im Suchmodus
+
+if 'patientenliste' not in st.session_state:
+    st.session_state.patientenliste = []
+
+
+# Funktion zum Setzen des Modus
 def set_mode(mode):
     st.session_state.mode = mode
-    st.session_state.stage = 1
 
-# Auswahl Buttons
-col1, col2 = st.columns(2)
-with col1:
-    st.button('Patienten', on_click=set_mode, args=['patient'], key='patient_btn', use_container_width=True)
-with col2:
-    st.button('Kalender', on_click=set_mode, args=['kalender'], key='kalender_btn', use_container_width=True)
+# Funktion zum Zurückkehren zum Hauptmenü
+def go_back():
+    st.session_state.mode = None
 
-# Optional: Button-Text größer machen mit CSS
+# Stylisierte Buttons mit CSS
 st.markdown("""
     <style>
     .stButton button {
@@ -34,6 +40,7 @@ st.markdown("""
         border-radius: 10px;
         box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
         transition: background 0.3s;
+        width: 100%;
     }
     .stButton button:hover {
         background: #42a5f5;
@@ -42,15 +49,40 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-def go_back():
-    st.session_state.button_clicked = None
+# Titel anzeigen, nur wenn kein Modus aktiv ist
+if st.session_state.mode is None:
+    st.title("T-Doc: Hauptmenü")
 
-# Anzeige je nach Auswahl
-if st.session_state.mode == 'patient' and st.session_state.stage == 1:
-    suche_patienten()
-elif st.session_state.mode == 'kalender' and st.session_state.stage == 1:
-    show_patient_calendar()
+    col1, col2 = st.columns(2)
+    with col1:
+        st.button('Patienten', on_click=set_mode, args=['patient'], key='btn_patient')
+    with col2:
+        st.button('Kalender', on_click=set_mode, args=['kalender'], key='btn_kalender')
+
+# Wenn Modus gewählt wurde, zeige entsprechenden Inhalt
+elif st.session_state.mode == 'patient':
+
+    # --- Suchmodus vs. Neuanlage ---
+    if st.session_state.suchmodus:
+        # Teil 1: Suchleiste + Suchergebnisse
+        search_term = searchbar()
+        gefundene_patienten = suche_patienten(search_term)
+
+        if search_term is not None:
+            if len(gefundene_patienten) > 0:
+                zeige_suchergebnisse(gefundene_patienten)
+                
+            else:
+                st.info("Keine Patienten gefunden.")
+                
+    neuen_patient_hinzufuegen()
+    zeige_patientenliste()
     st.button("Zurück zum Hauptmenü", on_click=go_back)
 
+elif st.session_state.mode == 'kalender':
+        show_patient_calendar()
+        st.button("Zurück zum Hauptmenü", on_click=go_back)
+    # Zurück-Button
 
+    st.button("Zurück zum Hauptmenü", on_click=go_back)
 
