@@ -15,7 +15,6 @@ if "therapy_sessions" not in st.session_state:
   
 def show_therapy_page(mein_patient=None):
     
-    print("Hallo")
     """Zeigt die Therapiedokumentation für den ausgewählten Patienten an."""
     if mein_patient is None:
         mein_patient = Patient(
@@ -103,7 +102,7 @@ def show_therapy_page(mein_patient=None):
 
                     with st.form(key=f"form_{session.timestamp}"):
                         tendency_option = st.selectbox(
-                        "Tendenz auswählen",
+                            "Tendenz auswählen",
                             options=["", "Steigend", "Fallend", "Stagnierend"],
                             index=["", "Steigend", "Fallend", "Stagnierend"].index(session.tendency),
                             key=f"selectbox_{session.timestamp}"
@@ -115,22 +114,29 @@ def show_therapy_page(mein_patient=None):
                             height=150,
                             key=f"text_area_{session.timestamp}"
                         )
-                        btn_col1, btn_col2 = st.columns([1, 1])
-                        with btn_col1:
-                            submitted = st.form_submit_button("Speichern")
-                        with btn_col2:
-                            if st.form_submit_button("Löschen"):
-                                delete_therapy_session(idx)
-                                st.rerun()
+                        
+                        submitted_save = st.form_submit_button("Speichern", use_container_width=True)
+                        
+                        submitted_delete = st.form_submit_button("Löschen", use_container_width=True)
+                            
+                        if submitted_delete:
+                            delete_therapy_session(idx)  # Diese Funktion kommt aus dem Import!
+                            st.success("Sitzung gelöscht.")
+                            st.rerun()
 
-                        if submitted:
+                        if submitted_save:
                             session.tendency = tendency_option
                             session.documentation = documentation
                             st.markdown('<div class="success-message">✅ Änderungen gespeichert!</div>', unsafe_allow_html=True)
                             st.rerun()
+
+                
+
                 with col2:
                     pass  # Optional: weitere Aktionen
-
+    
+    
+        
                     
 if __name__ == "__main__":
     show_therapy_page()

@@ -107,3 +107,4 @@ elif st.session_state.mode == 'therapie_dokumentation':
     patient = st.session_state.selected_patient
     patient = st.session_state.get('selected_patient', None)
     show_therapy_page(patient)
+    
