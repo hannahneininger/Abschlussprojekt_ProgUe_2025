@@ -5,40 +5,6 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 
-def create_tendency_dropdown():
-    tendency_options = ["Steigend", "Fallend", "Stagnierend"]
-    tendency = st.selectbox("Tendenz auswählen", tendency_options)
-    return tendency
-
-def get_numeric_tendency(tendency):
-    tendency_map = {"Steigend": 1, "Stagnierend": 0, "Fallend": -1}
-    return tendency_map.get(tendency, None)
-
-
-#%% 
-def add_therapy_session(patient):
-    """Add a new therapy session with today's date."""
-    today = datetime.now().strftime("%Y-%m-%d")
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S%f")
-
-    if "therapy_sessions" not in st.session_state:
-        st.session_state.therapy_sessions = []
-
-    existing_dates = [session.date for session in st.session_state.therapy_sessions]
-    if today in existing_dates:
-        st.warning("Für heute wurde bereits eine Therapiesitzung erfasst.")
-    else:
-        new_session = TherapySession(
-            date=today,
-            tendency="",
-            patient=patient.Name,
-            timestamp=timestamp
-        )
-        st.session_state.therapy_sessions.append(new_session)
-        st.success(f"Neue Therapiesitzung für {today} hinzugefügt!")
-        st.rerun()
-
-
 # %%
 #create an empty list of dates which can later on be filled with the dates of therapy sessions
 import streamlit as st
