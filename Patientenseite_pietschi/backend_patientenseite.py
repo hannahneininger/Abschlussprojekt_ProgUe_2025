@@ -20,28 +20,53 @@ class TherapySession:
 
 PATIENTEN_JSON = "patienten.json"
     
-# create a class Patient wich has the Attributes: Name = str, Vorname= str, Geburtsdatum= str, Straße= str, Hausnummer= int, PLZ= int, Stadt= str, Versicherung= str, Zusatzversicherung= True/False, Arzt= str, email= str, Telefon= int
+
 class Patient:
 
-    def __init__(self, ID, Name, Vorname, Geburtsdatum, Straße, Hausnummer, Postleitzahl, Stadt, Versicherung, Zusatzversicherung, Arzt, email, Telefon):
-        self.ID = ID
-
-        self.Name = Name
-        self.Vorname = Vorname
-        self.Geburtsdatum = Geburtsdatum
-        self.Straße = Straße
-        self.Hausnummer = Hausnummer
-        self.Postleitzahl = Postleitzahl
-        self.Stadt = Stadt
-        self.Versicherung = Versicherung
-        self.Zusatzversicherung = Zusatzversicherung
-        self.Arzt = Arzt
-        self.email = email
-        self.Telefon = Telefon
+    #def __init__(self, ID, Name, Vorname, Geburtsdatum, Straße, Hausnummer, Postleitzahl, Stadt, Versicherung, Zusatzversicherung, Arzt, email, Telefon):
+    def __init__(self, **kwargs):
+        self.ID = kwargs.get('ID', -1)
+        self.Name = kwargs.get('Name', '')
+        self.Vorname = kwargs.get('Vorname', '')
+        self.Geburtsdatum = kwargs.get('Geburtsdatum', '')
+        self.Straße = kwargs.get('Straße', '')
+        self.Hausnummer = kwargs.get('Hausnummer', '')
+        self.Postleitzahl = kwargs.get('Postleitzahl', '')
+        self.Stadt = kwargs.get('Stadt', '')
+        self.Versicherung = kwargs.get('Versicherung', '')
+        self.Zusatzversicherung = kwargs.get('Zusatzversicherung', False)
+        self.Arzt = kwargs.get('Arzt', '')
+        self.email = kwargs.get('email', '')
+        self.Telefon = kwargs.get('Telefon', 0)
 
     def __repr__(self):
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, "
                 f"Geburtsdatum={self.Geburtsdatum}, Arzt={self.Arzt})")
+    
+    def to_dict(self):
+        return self.__dict__
+    
+    @classmethod
+    def from_dict(cls, data):
+        # Normalisiere die Keys: z.B. "id" → "ID"
+        normalized = {
+            'ID': data.get('ID', data.get('id', data.get('Id', -1))),
+            'Name': data.get('Name', data.get('name', '')),
+            'Vorname': data.get('Vorname', data.get('vorname', '')),
+            'Geburtsdatum': data.get('Geburtsdatum', data.get('geburtsdatum', '')),
+            'Straße': data.get('Straße', data.get('strasse', data.get('straße', ''))),
+            'Hausnummer': data.get('Hausnummer', data.get('hausnummer', '')),
+            'Postleitzahl': data.get('Postleitzahl', data.get('plz', data.get('postleitzahl', ''))),
+            'Stadt': data.get('Stadt', data.get('stadt', '')),
+            'Versicherung': data.get('Versicherung', data.get('versicherung', '')),
+            'Zusatzversicherung': data.get('Zusatzversicherung', data.get('zusatzversicherung', '')),
+            'Arzt': data.get('Arzt', data.get('arzt', '')),
+            'email': data.get('email', data.get('e-mail', data.get('mail', ''))),
+            'Telefon': data.get('Telefon', data.get('telefon', ''))
+        }
+
+        return cls(**normalized)
+    
 
     def to_dict(self):
         return {
@@ -100,12 +125,9 @@ def delete_therapy_session(index):
     st.rerun()
 
     def __repr__(self):
-
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, Geburtsdatum={self.Geburtsdatum}, "
                 f"Versicherung={self.Versicherung}, Zusatzversicherung={self.Zusatzversicherung}, "
-                f"Arzt={self.Arzt}, email={self.email}, Telefon={self.Telefon})")
-    
-    
+
 
     @staticmethod
     def from_dict(data):

@@ -2,9 +2,19 @@
 import streamlit as st
 st.set_page_config(layout="wide")
 from patientenkalender import show_patient_calendar
-from patientseite import suche_patienten, searchbar, suche_patienten, zeige_suchergebnisse
-from patientseite import zeige_patientenliste, neuen_patient_hinzufuegen, lade_patienten, speichere_patienten
+
+from patientenkalender import show_patient_calendar
+from patientseite import (
+    suche_patienten,
+    searchbar,
+    zeige_suchergebnisse,
+    zeige_patientenliste,
+    neuen_patient_hinzufuegen,
+    lade_patienten,
+    speichere_patienten
+)
 from dokuseite import show_therapy_page
+
 
 # Initialisiere Session State für den Modus und die Stage
 if 'mode' not in st.session_state:
@@ -80,14 +90,17 @@ elif st.session_state.mode == 'patient':
     zeige_patientenliste()
     lade_patienten()
     speichere_patienten(patientenliste=st.session_state.patientenliste)
-    st.button("Zurück zum Hauptmenü", on_click=go_back)
+    st.button("Zurück zum Hauptmenü", on_click=go_back, key= "back_main_menu_patient")
 
 elif st.session_state.mode == 'kalender':
         show_patient_calendar()
-        st.button("Zurück zum Hauptmenü", on_click=go_back)
+        st.button("Zurück zum Hauptmenü", on_click=go_back, key="back_main_menu_calendar")
     # Zurück-Button
 
-        st.button("Zurück zum Hauptmenü", on_click=go_back)
+
+        st.button("Zurück zum Hauptmenü", on_click=go_back, key="back_main_menu_calendar")
+
+        
 
 elif st.session_state.mode == 'therapie_dokumentation':
     from dokuseite import show_therapy_page
@@ -103,3 +116,4 @@ elif st.session_state.mode == 'therapie_dokumentation':
         if st.button("Zurück zur Patientenliste"):
             st.session_state.mode = 'patient'
             st.rerun()
+
