@@ -1,7 +1,9 @@
 body {
-  background-color: lightgoldenrodyellow;
+  background-color: rgb(243, 235, 151);
 }
 
 div[data-testid="stHorizontalBlock"] > div:first-of-type {
-  background-color: rgb(69, 192, 254);
+  background-color: rgb(133, 198, 230);
 }
+
+

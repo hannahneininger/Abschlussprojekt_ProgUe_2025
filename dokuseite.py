@@ -1,15 +1,22 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+from Patientenseite_pietschi.backend_patientenseite import TherapySession, Patient, add_therapy_session, get_numeric_tendency, delete_therapy_session
+
+
+# Initialisiere die Therapiesitzungen nur einmal
+
 from datetime import datetime
 #from streamlit import experimental_rerun 
-
+from patientenkalender import show_patient_calendar
 # Set page config
 st.set_page_config(layout="wide")
-from Patientenseite_pietschi.backend_patientenseite import TherapySession,  Patient
-from Patientenseite_pietschi.backend_patientenseite import add_therapy_session, get_numeric_tendency
 
 
-#
+
+if "therapy_sessions" not in st.session_state:
+    st.session_state.therapy_sessions = []
+
+# Dummy-Patient
 mein_patient = Patient(
     Name="Neininger",
     Vorname="Hannobert",
@@ -22,23 +29,22 @@ mein_patient = Patient(
     Zusatzversicherung=True,
     Arzt="Dr. Schmidt",
     email="hannobert.neini@example.com",
-    Telefon=1234567890
+    Telefon=1234567890,
+    ID= 1
 )
 
-## Layout Load CSS
-def local_css(layout_css):
-    with open(layout_css) as f:
-        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
-
-local_css("layout.css")
+# Set page config
+st.set_page_config(layout="wide")
 
 left_col, right_col = st.columns([1, 3], gap="large")
 
-# linke Seite
+# def local_css(file_name):
+#     with open(file_name) as f:
+#         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
-if "therapy_session" not in st.session_state:
-    st.session_state.therapy_session = []
+# local_css("layout.css")
 
+# Linke Spalte: Patientendaten
 with left_col:
     st.markdown("### Patientendaten")
     patient_info_html = "<div style='line-height:1.3;'>"
@@ -50,9 +56,7 @@ with left_col:
     st.markdown("---")
     st.markdown("### Tendenz")
 
-    tendency_data = [
-        s for s in st.session_state.therapy_session if s.tendency and s.tendency != ""
-    ]
+    tendency_data = [s for s in st.session_state.therapy_sessions if s.tendency and s.tendency != ""]
     if tendency_data:
         times = [s.date for s in tendency_data]
         numeric_tendencies = [get_numeric_tendency(s.tendency) for s in tendency_data]
@@ -71,47 +75,69 @@ with left_col:
     else:
         st.write("Keine Tendenzen gespeichert.")
 
+# Rechte Spalte: Therapiedokumentation
 with right_col:
     st.header("Therapiedokumentation")
-    st.write("Soll hier noch was stehen?")
+    st.write("")
+
     st.button(
-        "Therapie-Sitzung hinzufügen", 
-        key="add_session", 
-        on_click=add_therapy_session, 
+        "Therapie-Sitzung hinzufügen",
+        key="add_session",
+        on_click=add_therapy_session,
         args=(mein_patient,)
     )
 
-    for idx, session in enumerate(st.session_state.therapy_session):
-        expander_label = f"Therapie-Sitzung {session.date}"
+    for idx, session in enumerate(st.session_state.therapy_sessions):
+
+        # Sicherstellen, dass es wirklich eine TherapySession ist
+        if not isinstance(session, TherapySession):
+            st.error(f"Fehler: Ungültiger Sitzungs-Typ in session_state gefunden! Typ: {type(session)}")
+            continue
+        displayed_date = getattr(session, 'displayed_date', session.date)
+        expander_label = f"Therapie-Sitzung {displayed_date}"
+
         with st.expander(expander_label):
-            with st.form(key=f"form_{session.timestamp}"):
-                st.write('''
-                    Dokumentiere die heutige Therapieeinheit. Vergiss nicht das pre- and post-Testing und die Tendenz der Therapie zu notieren.
-                ''')
+            col1, col2 = st.columns([4, 1])
 
-                st.text_input("Datum:", value=session.date, disabled=True)
+            with col1:
+                st.text_input("Datum:", value=session.displayed_date, disabled=True)
 
-                tendency_option = st.selectbox(
-                    "Tendenz auswählen",
-                    options=["Steigend", "Fallend", "Stagnierend"],
-                    index=0 if session.tendency == "" else ["Steigend", "Fallend", "Stagnierend"].index(session.tendency),
-                    key=f"selectbox_{session.timestamp}"
-                )
+                with st.form(key=f"form_{session.timestamp}"):
+                    tendency_option = st.selectbox(
+                        "Tendenz auswählen",
+                        options=["", "Steigend", "Fallend", "Stagnierend"],
+                        index=["", "Steigend", "Fallend", "Stagnierend"].index(session.tendency),
+                        key=f"selectbox_{session.timestamp}"
+                    )
 
-                documentation = st.text_area(
-                    "Therapie-Beschreibung / Notizen",
-                    value=session.documentation if hasattr(session, 'documentation') else "",
-                    height=150,
-                    key=f"text_area_{session.timestamp}",
-                    help="Hier können Sie zusätzliche Informationen zur Therapiesitzung eingeben."
-                )
+                    documentation = st.text_area(
+                        "Dokumentation",
+                        value=session.documentation,
+                        height=150,
+                        key=f"text_area_{session.timestamp}"
+                    )
 
-                submitted = st.form_submit_button("Speichern")
-                if submitted:
-                    session.tendency = tendency_option
-                    session.documentation = documentation
-                    st.success(f"Änderungen gespeichert!")
-                    st.rerun()
+                    btn_col1, btn_col2 = st.columns([1, 1])
+                    with btn_col1:
+                        submitted = st.form_submit_button("Speichern")
+                    with btn_col2:
+                        if st.form_submit_button("Löschen"):
+                            delete_therapy_session(idx)
+                            st.rerun()
+
+                    if submitted:
+                        session.tendency = tendency_option
+                        session.documentation = documentation
+                        st.markdown('<div class="success-message">✅ Änderungen gespeichert!</div>', unsafe_allow_html=True)
+                        st.rerun()
+
+            with col2:
+                pass  # Optional: weitere Aktionen
+
+               
+
+
 
 if __name__ == "__main__":
     pass
+

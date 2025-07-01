@@ -87,6 +87,7 @@ def neuen_patient_hinzufuegen():
         # zeige nächste verfügbare Patienten-ID
         st.write(f"Nächste verfügbare Patienten-ID: {st.session_state.next_patient_id}")
 
+
         col1, col2 = st.columns(2)
         with col1:
             Vorname = st.text_input("Vorname")
@@ -171,3 +172,4 @@ if 'next_patient_id' not in st.session_state:
 # Zeige Liste an
 
 #zeige_patientenliste()
+
