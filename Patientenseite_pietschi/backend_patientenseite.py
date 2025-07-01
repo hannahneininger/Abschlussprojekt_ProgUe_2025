@@ -5,12 +5,6 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 
 
-# %%
-#create an empty list of dates which can later on be filled with the dates of therapy sessions
-import streamlit as st
-from datetime import datetime
-
-
 class TherapySession:
     def __init__(self, date, displayed_date, tendency, patient, timestamp=None, documentation=""):
         self.date = date
@@ -22,7 +16,6 @@ class TherapySession:
 
     def __repr__(self):
         return f"TherapySession(date={self.date}, tendency={self.tendency}, patient={self.patient})"
-
 
 class Patient:
 
@@ -46,17 +39,14 @@ class Patient:
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, "
                 f"Geburtsdatum={self.Geburtsdatum}, Arzt={self.Arzt})")
 
-
 def create_tendency_dropdown():
     tendency_options = ["Steigend", "Fallend", "Stagnierend"]
     tendency = st.selectbox("Tendenz auswählen", tendency_options)
     return tendency
 
-
 def get_numeric_tendency(tendency):
     tendency_map = {"Steigend": 1, "Stagnierend": 0, "Fallend": -1}
     return tendency_map.get(tendency, None)
-
 
 def add_therapy_session(patient):
     """Add a new therapy session with today's date or versioned duplicate if one exists."""
@@ -83,8 +73,6 @@ def add_therapy_session(patient):
     st.session_state.therapy_sessions.append(new_session)
     st.success(f"✅ Neue Therapiesitzung hinzugefügt: {displayed_date}")
 
-
-
 def delete_therapy_session(index):
     """Löscht die Therapiesitzung am gegebenen Index."""
     st.session_state.therapy_sessions.pop(index)
@@ -95,4 +83,3 @@ def delete_therapy_session(index):
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, Geburtsdatum={self.Geburtsdatum}, "
                 f"Versicherung={self.Versicherung}, Zusatzversicherung={self.Zusatzversicherung}, "
                 f"Arzt={self.Arzt}, email={self.email}, Telefon={self.Telefon})")
-
