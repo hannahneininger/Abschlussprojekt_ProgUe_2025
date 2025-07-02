@@ -102,7 +102,7 @@ def show_therapy_page(mein_patient=None):
             st.session_state[anamnese_key] = getattr(mein_patient, "Anamnese", "")
 
         anamnese_text = st.text_area(
-            "📝 Anamnese / Vorbericht",
+            "Speichern mit Strg+Enter",
             value=st.session_state[anamnese_key],
             height=150,
             key=f"anamnese_input_{mein_patient.ID}",

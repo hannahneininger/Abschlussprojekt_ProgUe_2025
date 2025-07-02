@@ -61,6 +61,7 @@ class Patient:
         self.email = kwargs.get('email', '')
         self.Telefon = kwargs.get('Telefon', 0)
         self.Anamnese = kwargs.get('Anamnese', '')
+        
 
     def __repr__(self):
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, "
@@ -108,6 +109,7 @@ class Patient:
             "email": self.email,
             "Telefon": self.Telefon,
             "Anamnese": self.Anamnese
+            
         }
 
 def create_tendency_dropdown():

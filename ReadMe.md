@@ -31,7 +31,7 @@ Option 3:
 # State 2.2   
 Das Aussuchen eines Patienten UND das speichern eines neuen Patienten, soll auf die Patienten-Seite führen.
 Diese Seite wird die Hauptseite des Projekts. Sie soll links eine Spalte haben mit den Patienten-Daten. Zusätzlich eine Ansicht der Anamnese (evtl Hauptdiagnose und Ziel).
- Darunter soll eine Graphik generiert werden, welche die Tendenz des Patienten über den Behandlungsverlauf angibt. Diese wiederum zieht ihren Input aus der Verlaufsdoku/ Behandlungsdoku, welche den Hauptteil der Seite darstellt.
+Darunter soll eine Graphik generiert werden, welche die Tendenz des Patienten über den Behandlungsverlauf angibt. Diese wiederum zieht ihren Input aus der Verlaufsdoku/ Behandlungsdoku, welche den Hauptteil der Seite darstellt.
 
 Die Doku wäre als Dropdown Balken denkbar:
     geschlossener Balken:   "T1- dd/mm/yyyy"
