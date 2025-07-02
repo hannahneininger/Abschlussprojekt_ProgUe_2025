@@ -45,7 +45,7 @@ PATIENTEN_JSON = "patienten.json"
     
 
 class Patient:
-    """Represents a patient with various attributes. mit kwargs damit man flexibel beim Erstellen von Patienten ist."""
+    """Represents a patient with various attributes."""
     def __init__(self, **kwargs):
         self.ID = kwargs.get('ID', -1)
         self.Name = kwargs.get('Name', '')
@@ -61,18 +61,34 @@ class Patient:
         self.email = kwargs.get('email', '')
         self.Telefon = kwargs.get('Telefon', 0)
         self.Anamnese = kwargs.get('Anamnese', '')
-        
+        self.sessions = []  # Leere Liste für spätere Sitzungen
 
     def __repr__(self):
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, "
                 f"Geburtsdatum={self.Geburtsdatum}, Arzt={self.Arzt})")
-    
+
     def to_dict(self):
-        return self.__dict__
-    
+        data = {
+            "ID": self.ID,
+            "Vorname": self.Vorname,
+            "Name": self.Name,
+            "Geburtsdatum": self.Geburtsdatum,
+            "Straße": self.Straße,
+            "Hausnummer": self.Hausnummer,
+            "Postleitzahl": self.Postleitzahl,
+            "Stadt": self.Stadt,
+            "Versicherung": self.Versicherung,
+            "Zusatzversicherung": self.Zusatzversicherung,
+            "Arzt": self.Arzt,
+            "email": self.email,
+            "Telefon": self.Telefon,
+            "Anamnese": self.Anamnese,
+            "sessions": [session.to_dict() for session in self.sessions]  # Sessions werden hier mitgespeichert
+        }
+        return data
+
     @classmethod
     def from_dict(cls, data):
-        # Normalisiere die Keys: z.B. "id" → "ID"
         normalized = {
             'ID': data.get('ID', data.get('id', data.get('Id', -1))),
             'Name': data.get('Name', data.get('name', '')),
@@ -90,27 +106,13 @@ class Patient:
             'Anamnese': data.get('Anamnese', data.get('anamnese', ''))
         }
 
-        return cls(**normalized)
-    
+        patient = cls(**normalized)
 
-    def to_dict(self):
-        return {
-            "ID": self.ID,
-            "Vorname": self.Vorname,
-            "Name": self.Name,
-            "Geburtsdatum": self.Geburtsdatum,
-            "Straße": self.Straße,
-            "Hausnummer": self.Hausnummer,
-            "Postleitzahl": self.Postleitzahl,
-            "Stadt": self.Stadt,
-            "Versicherung": self.Versicherung,
-            "Zusatzversicherung": self.Zusatzversicherung,
-            "Arzt": self.Arzt,
-            "email": self.email,
-            "Telefon": self.Telefon,
-            "Anamnese": self.Anamnese
-            
-        }
+        # Falls Sitzungen im Dict sind, lade sie als TherapySession-Objekte
+        sessions_data = data.get("sessions", [])
+        patient.sessions = [TherapySession.from_dict(sess) for sess in sessions_data]
+
+        return patient
 
 def create_tendency_dropdown():
     tendency_options = ["Steigend", "Fallend", "Stagnierend"]
@@ -143,9 +145,10 @@ def add_therapy_session(patient):
         timestamp=timestamp,
         documentation=""
     )
-
+    patient.sessions.append(new_session)
     st.session_state.therapy_sessions.append(new_session)
     st.success(f"✅ Neue Therapiesitzung hinzugefügt: {displayed_date}")
+    
 
 def delete_therapy_session(index):
     """Löscht die Therapiesitzung am gegebenen Index."""
@@ -154,9 +157,6 @@ def delete_therapy_session(index):
 
     
 
-    @staticmethod
-    def from_dict(data):
-        return Patient(**data)
 
 
 

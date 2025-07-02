@@ -1,10 +1,14 @@
+## Anwendung
+Falls dieser Code nur über Github zur Verfügung steht, muss zur Anwendung der App das GitHub reository gecloned und in Visual Studio ausgeführt werden. Hierzu ist die Installation von PDM notwendig damit dann mithilfe con Streamlit ("streamlit run main.py") die App geladen werden kann.
+
+
 ### Therapiedokumentations Datei
 In diesem Abschlussprojekt soll ein Prototyp für ein Therapiedokumentationsprogramm erstellt werden.
 Der Fokus dieses Programms soll dabei auf dem Therapieverlauf liegen. Funktionen, welche mehr der Therapieplanung und -organisation dienen, sollen im Rahmen des Projektes zuvernachlässigen sein.
 Die Überlegung ist, mehrere 'States' zu erschaffen, auf welche über ein einfaches, aber ansprechendes Interface zugegriffen werden kann.
 
 ## States
-In diesem Abschitt sollen die Vorläufigen Ideen der Haupt-States beschrieben werden. Sie sollen später miteinander verknüpft werden und Informationen untereinander kommunizieren.
+In diesem Abschitt sollen die Ideen der Haupt-States beschrieben werden. Sie sollen später miteinander verknüpft werden und Informationen untereinander kommunizieren.
 - States (in dem Kontext): interaktive Seiten
 
 # State 1- "Hauptmenü"
@@ -39,7 +43,7 @@ Option 3:
     Dort sollen zwei Interaktionen möglich sein. Entweder "Löschen" oder "Auswählen" 
     Wenn man auf "Auswählen" klickt wird dann die Dokumentationsseite des jeweiligen Patienten geöffnet.
     
-# Dokumentationsseite   
+# State 3- "Dokumentationsseite"   
 Das "Auswählen" eines Patienten aus der Patientenliste soll auf die Patienten-Seite führen.
 Diese Seite wird die Hauptseite des Projekts. Sie soll links eine Spalte haben, in der die Patientendaten sowie die Anamnese dargestellt werden. Zusätzlich soll ein Textfeld mit der Anamnese bestehen.
 Darunter- ebenfalls auf der linken Seite- soll eine Graphik generiert werden, welche die Tendenz des Patienten über den Behandlungsverlauf angibt. Diese wiederum zieht ihren Input aus der Verlaufsdoku/ Behandlungsdoku, welche den Hauptteil der Seite darstellt.
@@ -53,5 +57,5 @@ Die Doku soll als Expander dargestellt werden und über einen Button "Therapie h
                                                 - schlechter    value= -1 
                         beschreibbares Feld für Therapiedoku
 
-# Patientenkalender
+# State 4- "Patientenkalender"
 Der Kalender selbst ist im Rahmen des Projektes ein "Nice-To-Have"-Aspekt, dessen Bedeutung lediglich der Übersichtlichkeit dienen soll. Wie bereits erwähnt steht die Therapieplanung, bei welcher der Kalender deutlich ausreizendere Funktionen erfüllen sollte, keine Rolle. Daher lassen sich über den Kalender Termine erstellen, welche dann in der Dokuseite erscheinen un die erstellten Termine der Dokuseite wiederum erscheinen im Kalender. Da wir auf eine Work-Life-Balance der Nutzer achten, ist der Kalender nur für die Arbeitszeiten des fiktiven Therapieanbieters zugänglich.
