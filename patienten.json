@@ -4,7 +4,7 @@
         "Vorname": "Julia",
         "Name": "Pietschmann",
         "Geburtsdatum": "1997-07-02",
-        "Stra\u00dfe": "Speckbacherstrasse",
+        "Stra\u00dfe": "Speckbacherstra\u00dfe",
         "Hausnummer": "9",
         "Postleitzahl": "6020",
         "Stadt": "Innsbruck",
@@ -13,7 +13,25 @@
         "Arzt": "",
         "email": "juliapietschmann@gmx.de",
         "Telefon": "00491733100729",
-        "Anamnese": "Es geht ihr gut und besser."
+        "Anamnese": "Knieschmerzen .. Onset vor 3 Wochen.",
+        "sessions": [
+            {
+                "date": "2025-03-10",
+                "displayed_date": "10. M\u00e4rz 2025",
+                "tendency": "Steigend",
+                "patient": 1,
+                "timestamp": "2025-03-10T09:30:00Z",
+                "documentation": "Julia berichtet von Verbesserungen im Alltag. Motivation hoch, \u00dcbungen werden regelm\u00e4\u00dfig durchgef\u00fchrt."
+            },
+            {
+                "date": "2025-03-17",
+                "displayed_date": "17. M\u00e4rz 2025",
+                "tendency": "Fallend",
+                "patient": 1,
+                "timestamp": "2025-03-17T10:00:00Z",
+                "documentation": "Keine neuen R\u00fcckschl\u00e4ge. Julia zeigt sich weiter engagiert. Fokus auf Entspannungstechniken gelegt."
+            }
+        ]
     },
     {
         "ID": 2,
@@ -24,11 +42,29 @@
         "Hausnummer": "16",
         "Postleitzahl": "6020",
         "Stadt": "Innsbruck",
-        "Versicherung": "\u00f6gk",
+        "Versicherung": "\u00f6GK",
         "Zusatzversicherung": "",
         "Arzt": "",
         "email": "hannobert.neini@gmail.de",
         "Telefon": "",
-        "Anamnese": ""
+        "Anamnese": "",
+        "sessions": [
+            {
+                "date": "2025-03-12",
+                "displayed_date": "12. M\u00e4rz 2025",
+                "tendency": "Stagnierend",
+                "patient": 2,
+                "timestamp": "2025-03-12T14:00:00Z",
+                "documentation": "Erstgespr\u00e4ch. Hannah wirkt zur\u00fcckhaltend, gibt wenig preis. Ziel: Vertrauensaufbau."
+            },
+            {
+                "date": "2025-03-19",
+                "displayed_date": "19. M\u00e4rz 2025",
+                "tendency": "Steigend",
+                "patient": 2,
+                "timestamp": "2025-03-19T14:30:00Z",
+                "documentation": "Hannah hat erste Emotionen gezeigt. Arbeit an Selbstwahrnehmung gestartet. Hausaufgaben teilweise bearbeitet."
+            }
+        ]
     }
 ]

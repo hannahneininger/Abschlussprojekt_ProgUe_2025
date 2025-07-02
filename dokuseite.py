@@ -27,7 +27,7 @@ if "therapy_sessions" not in st.session_state:
 
   
 def show_therapy_page(mein_patient=None):
-    
+
     if 'therapy_sessions' not in st.session_state:
         st.session_state.therapy_sessions = load_therapy_sessions_from_file()
 
@@ -63,14 +63,15 @@ def show_therapy_page(mein_patient=None):
         st.markdown("### 👤 Patientendaten")
         patient_info_html = "<div style='line-height:1.3;'>"
         for key, value in mein_patient.__dict__.items():
-            patient_info_html += f"<div><strong>{key}:</strong> {value}</div>"
+            if key not in ["Anamnese", "sessions"]:
+                patient_info_html += f"<div><strong>{key}:</strong> {value}</div>"
         patient_info_html += "</div>"
         st.markdown(patient_info_html, unsafe_allow_html=True)
 
         st.markdown("---")
         st.markdown("### 📈 Tendenz")
 
-        tendency_data = [s for s in st.session_state.therapy_sessions if s.tendency and s.tendency != ""]
+        tendency_data = [s for s in mein_patient.sessions if s.tendency and s.tendency != ""]
         if tendency_data:
             times = [s.date for s in tendency_data]
             numeric_tendencies = [get_numeric_tendency(s.tendency) for s in tendency_data]
@@ -117,14 +118,11 @@ def show_therapy_page(mein_patient=None):
             st.rerun()  # Optional: um Erfolgsmeldung sofort zu zeigen
 
 
-        st.button(
-            "Therapie-Sitzung hinzufügen",
-            key="add_session",
-            on_click=add_therapy_session,
-            args=(mein_patient,)
-        )
+        if st.button("Therapie-Sitzung hinzufügen", key="add_session"):
+            add_therapy_session(mein_patient)
+            st.rerun()
 
-        for idx, session in enumerate(st.session_state.therapy_sessions):
+        for idx, session in enumerate(mein_patient.sessions):
 
                 # Sicherstellen, dass es wirklich eine TherapySession ist
             if not isinstance(session, TherapySession):
