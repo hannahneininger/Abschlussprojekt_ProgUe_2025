@@ -2,12 +2,25 @@ import streamlit as st
 import matplotlib.pyplot as plt
 from Patientenseite_pietschi.backend_patientenseite import TherapySession, Patient, add_therapy_session, get_numeric_tendency, delete_therapy_session
 
+import os
 from datetime import datetime
 #from streamlit import experimental_rerun 
 from patientenkalender import show_patient_calendar
 
+import json
 
+# 1. Speichere alle TherapySessions in einer JSON-Datei
+def save_therapy_sessions_to_file(filename="therapy_sessions.json"):
+    with open(filename, "w") as f:
+        json.dump([s.to_dict() for s in st.session_state.therapy_sessions], f, indent=4)
 
+def load_therapy_sessions_from_file(filename="therapy_sessions.json"):
+    if os.path.exists(filename):
+        with open(filename, "r") as f:
+            data = json.load(f)
+            return [TherapySession.from_dict(d) for d in data]
+    else:
+        return []
 
 if "therapy_sessions" not in st.session_state:
     st.session_state.therapy_sessions = []
@@ -15,6 +28,9 @@ if "therapy_sessions" not in st.session_state:
   
 def show_therapy_page(mein_patient=None):
     
+    if 'therapy_sessions' not in st.session_state:
+        st.session_state.therapy_sessions = load_therapy_sessions_from_file()
+
     """Zeigt die Therapiedokumentation für den ausgewählten Patienten an."""
     if mein_patient is None:
         mein_patient = Patient(
@@ -77,6 +93,29 @@ def show_therapy_page(mein_patient=None):
     with right_col:
         st.header("📁 Therapiedokumentation")
         st.write("")
+
+        st.markdown("### 📝 Anamnese")
+
+        # Hole aktuelle Anamnese aus session_state oder leere Zeichenkette
+        anamnese_key = f"anamnese_{mein_patient.ID}"
+        if anamnese_key not in st.session_state:
+            st.session_state[anamnese_key] = getattr(mein_patient, "Anamnese", "")
+
+        anamnese_text = st.text_area(
+            "📝 Anamnese / Vorbericht",
+            value=st.session_state[anamnese_key],
+            height=150,
+            key=f"anamnese_input_{mein_patient.ID}",
+            help="Diese Anamneseinformation wird für diesen Patienten gespeichert."
+        )
+
+    # Speichere die Anamnese direkt, wenn sich etwas geändert hat
+        if anamnese_text != st.session_state[anamnese_key]:
+            st.session_state[anamnese_key] = anamnese_text
+            mein_patient.Anamnese = anamnese_text  # Optional: speichere es auch im Patientenobjekt
+            st.success("✅ Anamnese gespeichert.")
+            st.rerun()  # Optional: um Erfolgsmeldung sofort zu zeigen
+
 
         st.button(
             "Therapie-Sitzung hinzufügen",

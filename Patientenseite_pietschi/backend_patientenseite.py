@@ -17,6 +17,29 @@ class TherapySession:
     def __repr__(self):
         return f"TherapySession(date={self.date}, tendency={self.tendency}, patient={self.patient})"
 
+    # ➕ Neue Methode: Konvertiert Objekt zu Dictionary für JSON-Speicherung
+    def to_dict(self):
+        return {
+            "date": self.date,
+            "displayed_date": self.displayed_date,
+            "tendency": self.tendency,
+            "patient": self.patient,
+            "timestamp": self.timestamp,
+            "documentation": self.documentation
+        }
+
+    # ➕ Neue Methode: Erstellt ein TherapySession-Objekt aus einem Dictionary
+    @classmethod
+    def from_dict(cls, data):
+        return cls(
+            date=data.get("date"),
+            displayed_date=data.get("displayed_date"),
+            tendency=data.get("tendency"),
+            patient=data.get("patient"),
+            timestamp=data.get("timestamp"),
+            documentation=data.get("documentation", "")  # Standardwert leerer String
+        )
+
 
 PATIENTEN_JSON = "patienten.json"
     
@@ -37,6 +60,7 @@ class Patient:
         self.Arzt = kwargs.get('Arzt', '')
         self.email = kwargs.get('email', '')
         self.Telefon = kwargs.get('Telefon', 0)
+        self.Anamnese = kwargs.get('Anamnese', '')
 
     def __repr__(self):
         return (f"Patient(Name={self.Name}, Vorname={self.Vorname}, "
@@ -61,7 +85,8 @@ class Patient:
             'Zusatzversicherung': data.get('Zusatzversicherung', data.get('zusatzversicherung', '')),
             'Arzt': data.get('Arzt', data.get('arzt', '')),
             'email': data.get('email', data.get('e-mail', data.get('mail', ''))),
-            'Telefon': data.get('Telefon', data.get('telefon', ''))
+            'Telefon': data.get('Telefon', data.get('telefon', '')),
+            'Anamnese': data.get('Anamnese', data.get('anamnese', ''))
         }
 
         return cls(**normalized)
@@ -81,7 +106,8 @@ class Patient:
             "Zusatzversicherung": self.Zusatzversicherung,
             "Arzt": self.Arzt,
             "email": self.email,
-            "Telefon": self.Telefon
+            "Telefon": self.Telefon,
+            "Anamnese": self.Anamnese
         }
 
 def create_tendency_dropdown():

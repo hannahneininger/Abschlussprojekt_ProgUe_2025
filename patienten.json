@@ -12,7 +12,8 @@
         "Zusatzversicherung": "",
         "Arzt": "",
         "email": "juliapietschmann@gmx.de",
-        "Telefon": "00491733100729"
+        "Telefon": "00491733100729",
+        "Anamnese": "Es geht ihr gut."
     },
     {
         "ID": 2,
@@ -27,6 +28,7 @@
         "Zusatzversicherung": "",
         "Arzt": "",
         "email": "hannobert.neini@gmail.de",
-        "Telefon": ""
+        "Telefon": "",
+        "Anamnese": ""
     }
 ]
