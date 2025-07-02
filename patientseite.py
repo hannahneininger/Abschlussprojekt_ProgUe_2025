@@ -24,7 +24,7 @@ def searchbar():
     Creates a search bar for patient names.
     Returns the search term entered by the user.
     """
-    st.markdown("### Suche nach Patienten")
+    st.markdown("### 🔍 Suche nach Patienten")
     search_term = st.text_input("Geben Sie den Namen des Patienten ein:")
     return search_term.strip() if search_term else None
 
@@ -44,7 +44,7 @@ def suche_patienten(search_term):
 def zeige_suchergebnisse(ergebnisse):
     if not ergebnisse:
         st.info("Keine Patienten gefunden.")
-        if st.button("Neuen Patienten hinzufügen"):
+        if st.button("🆕 Neuen Patienten hinzufügen"):
             st.session_state.suchmodus = False
         return
     
@@ -91,7 +91,7 @@ if 'next_patient_id' not in st.session_state:
     st.session_state.next_patient_id = 1
 
 def zeige_patientenliste():
-    st.subheader("Liste aller Patienten")
+    st.subheader("📋 Liste aller Patienten")
     if len(st.session_state.patientenliste) == 0:
         st.info("Keine Patienten vorhanden.")
         return
@@ -103,7 +103,7 @@ def zeige_patientenliste():
             st.markdown(f"**{patient.Vorname} {patient.Name}**")
 
         with col2:
-            if st.button(f"Auswählen", key=f"btn_select_{idx}"):
+            if st.button(f"📁 Auswählen", key=f"btn_select_{idx}"):
                 st.session_state.selected_patient = patient
                 st.session_state.mode = "therapie_dokumentation"
                 show_therapy_page(patient)
@@ -111,7 +111,7 @@ def zeige_patientenliste():
         # Button zum Löschen des Patienten      
 
         with col3:
-            if st.button(f"Löschen", key=f"btn_delete_{idx}"):
+            if st.button(f"🗑️ Löschen", key=f"btn_delete_{idx}"):
                 # Frage bestätigung
                 del st.session_state.patientenliste[idx]
                 speichere_patienten(st.session_state.patientenliste)
@@ -137,7 +137,7 @@ def patient_exists(vorname, name, geburtsdatum):
 
 def neuen_patient_hinzufuegen():
     with st.form("neuer_patient_form"):
-        st.subheader("Neuen Patienten hinzufügen")
+        st.subheader("🆕 Neuen Patienten hinzufügen")
         st.write(f"Nächste verfügbare Patienten-ID: {st.session_state.next_patient_id}")
 
         col1, col2 = st.columns(2)

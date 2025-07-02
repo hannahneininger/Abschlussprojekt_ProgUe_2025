@@ -44,7 +44,7 @@ def show_therapy_page(mein_patient=None):
     # local_css("layout.css")
     # Linke Spalte: Patientendaten
     with left_col:
-        st.markdown("### Patientendaten")
+        st.markdown("### 👤 Patientendaten")
         patient_info_html = "<div style='line-height:1.3;'>"
         for key, value in mein_patient.__dict__.items():
             patient_info_html += f"<div><strong>{key}:</strong> {value}</div>"
@@ -52,7 +52,7 @@ def show_therapy_page(mein_patient=None):
         st.markdown(patient_info_html, unsafe_allow_html=True)
 
         st.markdown("---")
-        st.markdown("### Tendenz")
+        st.markdown("### 📈 Tendenz")
 
         tendency_data = [s for s in st.session_state.therapy_sessions if s.tendency and s.tendency != ""]
         if tendency_data:
@@ -75,7 +75,7 @@ def show_therapy_page(mein_patient=None):
 
         # Rechte Spalte: Therapiedokumentation
     with right_col:
-        st.header("Therapiedokumentation")
+        st.header("📁 Therapiedokumentation")
         st.write("")
 
         st.button(
@@ -115,9 +115,9 @@ def show_therapy_page(mein_patient=None):
                             key=f"text_area_{session.timestamp}"
                         )
                         
-                        submitted_save = st.form_submit_button("Speichern", use_container_width=True)
+                        submitted_save = st.form_submit_button("💾 Speichern", use_container_width=True)
                         
-                        submitted_delete = st.form_submit_button("Löschen", use_container_width=True)
+                        submitted_delete = st.form_submit_button("🗑️ Löschen", use_container_width=True)
                             
                         if submitted_delete:
                             delete_therapy_session(idx)  # Diese Funktion kommt aus dem Import!
@@ -135,7 +135,10 @@ def show_therapy_page(mein_patient=None):
                 with col2:
                     pass  # Optional: weitere Aktionen
     
-    
+    if st.button("⬅️ Zurück zur Patientenliste", key="btn_back_to_list"):
+        st.session_state.pop('selected_patient', None)
+        st.session_state.mode = "patientenliste"  # ODER wie auch immer dein Modus heißt
+        st.rerun()
         
                     
 if __name__ == "__main__":

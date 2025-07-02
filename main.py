@@ -71,9 +71,9 @@ if st.session_state.mode is None:
 
     col1, col2 = st.columns(2)
     with col1:
-        st.button('Patienten', on_click=set_mode, args=['patient'], key='btn_patient')
+        st.button('🧑‍⚕️ Patienten', on_click=set_mode, args=['patient'], key='btn_patient')
     with col2:
-        st.button('Kalender', on_click=set_mode, args=['kalender'], key='btn_kalender')
+        st.button('📅 Kalender', on_click=set_mode, args=['kalender'], key='btn_kalender')
 
 # Wenn Modus gewählt wurde, zeige entsprechenden Inhalt
 elif st.session_state.mode == 'patient':
@@ -95,12 +95,33 @@ elif st.session_state.mode == 'patient':
     zeige_patientenliste()
     lade_patienten()
     speichere_patienten(patientenliste=st.session_state.patientenliste)
-    st.button("Zurück zum Hauptmenü", on_click=go_back, key= "back_main_menu_patient")
+    st.button("⬅️ Zurück zum Hauptmenü", on_click=go_back, key= "back_main_menu_patient")
 
 elif st.session_state.mode == 'kalender':
         show_patient_calendar()
-        st.button("Zurück zum Hauptmenü", on_click=go_back, key="back_main_menu_calendar")
+        st.button("⬅️ Zurück zum Hauptmenü", on_click=go_back, key="back_main_menu_calendar")
     
+
+elif st.session_state.mode == "patientenliste":
+    # --- Suchmodus vs. Neuanlage ---
+    if st.session_state.suchmodus:
+        # Teil 1: Suchleiste + Suchergebnisse
+        search_term = searchbar()
+        gefundene_patienten = suche_patienten(search_term)
+
+        if search_term is not None:
+            if len(gefundene_patienten) > 0:
+                zeige_suchergebnisse(gefundene_patienten)
+                
+            else:
+                st.info("Keine Patienten gefunden.")
+                
+    neuen_patient_hinzufuegen()
+    zeige_patientenliste()
+    lade_patienten()
+    speichere_patienten(patientenliste=st.session_state.patientenliste)
+    st.button("Zurück zum Hauptmenü", on_click=go_back, key= "back_main_menu_patient")
+
 
 
 elif st.session_state.mode == 'therapie_dokumentation':

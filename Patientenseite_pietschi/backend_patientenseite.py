@@ -95,6 +95,7 @@ def get_numeric_tendency(tendency):
 
 def add_therapy_session(patient):
     """Add a new therapy session with today's date or versioned duplicate if one exists."""
+    
     today = datetime.now().strftime("%Y-%m-%d")
 
     # Count how many sessions already exist for today
@@ -128,5 +129,6 @@ def delete_therapy_session(index):
     @staticmethod
     def from_dict(data):
         return Patient(**data)
+
 
 
