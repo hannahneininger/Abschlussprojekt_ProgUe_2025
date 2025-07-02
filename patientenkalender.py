@@ -54,6 +54,17 @@ def show_patient_calendar():
         submitted = st.form_submit_button("🆕 Termin hinzufügen")
 
         if submitted:
+            
+            # Validierung: Nur Uhrzeiten zwischen 07:00 und 17:30 erlauben
+            min_uhrzeit = datetime.strptime("07:00", "%H:%M").time()
+            max_uhrzeit = datetime.strptime("17:30", "%H:%M").time()
+
+            if uhrzeit < min_uhrzeit or uhrzeit > max_uhrzeit:
+                st.error("⚠️ Bitte wähle eine Uhrzeit zwischen 07:00 und 17:30 Uhr.")
+                st.stop()  # Stoppt die weitere Verarbeitung, falls Uhrzeit ungültig
+
+            # Validierung der Eingaben
+
             if name and beschreibung:
         # Validierung der Uhrzeit
                 if not (7 <= uhrzeit.hour < 18):
