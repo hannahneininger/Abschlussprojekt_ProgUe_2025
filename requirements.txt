@@ -1,6 +1,6 @@
-flask
-sqlalchemy
 pandas
-requests
+datetime
+streamlit   
 numpy
 matplotlib
+json
