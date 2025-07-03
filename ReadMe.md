@@ -1,5 +1,8 @@
 ## Anwendung
-Falls dieser Code nur über Github zur Verfügung steht, muss zur Anwendung der App das GitHub reository gecloned und in Visual Studio ausgeführt werden. Hierzu ist die Installation von PDM notwendig damit dann mithilfe con Streamlit ("streamlit run main.py") die App geladen werden kann.
+Falls dieser Code nur über Github zur Verfügung steht, muss zur Anwendung der App das GitHub reository gecloned und in Visual Studio ausgeführt werden. Hierzu ist die Installation von PDM notwendig damit dann mithilfe con Streamlit ("streamlit run main.py") die App geladen werden kann. 
+
+Ansonsten ist sie über folgenden Link zu nutzen:
+
 
 
 ### Therapiedokumentations Datei
